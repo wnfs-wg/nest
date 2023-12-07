@@ -62,7 +62,7 @@
   },
   "devDependencies": {
     "@types/assert": "^1.5.9",
-    "@types/mocha": "^10.0.4",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^20.9.0",
     "assert": "^2.1.0",
     "mocha": "^10.2.0",
