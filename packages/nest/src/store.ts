@@ -21,7 +21,7 @@ export async function cid(bytes: Uint8Array, codecId: number): Promise<CID> {
   return CID.createV1(codec.code, multihash)
 }
 
-export function wnfsStore(blockstore: Blockstore): WnfsBlockStore {
+export function wnfsStoreInterface(blockstore: Blockstore): WnfsBlockStore {
   return {
     async getBlock(cid: Uint8Array): Promise<Uint8Array | undefined> {
       const decodedCid = CID.decode(cid)
@@ -33,4 +33,17 @@ export function wnfsStore(blockstore: Blockstore): WnfsBlockStore {
       return bytes
     },
   }
+}
+
+export async function store(
+  bytes: Uint8Array,
+  codecId: Codecs.CodecIdentifier,
+  blockstore: Blockstore
+): Promise<CID> {
+  const codec = Codecs.getByIdentifier(codecId)
+  const c = await cid(bytes, codec.code)
+
+  await blockstore.put(c, bytes)
+
+  return c
 }

@@ -1,6 +1,6 @@
 import type { BlockStore } from 'wnfs'
 
-import type * as Path from './path/index.js'
+import type * as Path from './path.js'
 
 // TODO: import * as Unix from "./unix.js"
 
@@ -42,18 +42,17 @@ export const publicCreateDirectory = () => {
   }
 }
 
-export const publicRemove =
-  () =>
-  async (params: PublicParams): Promise<WnfsPublicResult> => {
+export const publicRemove = () => {
+  return async (params: PublicParams): Promise<WnfsPublicResult> => {
     return await params.rootTree.publicRoot.rm(
       params.pathSegments,
       params.blockStore
     )
   }
+}
 
-export const publicWrite =
-  (bytes: Uint8Array) =>
-  async (params: PublicParams): Promise<WnfsPublicResult> => {
+export const publicWrite = (bytes: Uint8Array) => {
+  return async (params: PublicParams): Promise<WnfsPublicResult> => {
     const cid = await Unix.importFile(bytes, params.dependencies.depot)
 
     return await params.rootTree.publicRoot.write(
@@ -63,6 +62,7 @@ export const publicWrite =
       params.blockStore
     )
   }
+}
 
 // PRIVATE
 

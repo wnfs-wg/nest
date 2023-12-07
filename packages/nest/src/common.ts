@@ -1,4 +1,4 @@
-import * as Path from './path/index.js'
+import * as Path from './path.js'
 
 export function addOrIncreaseNameNumber(
   path: Path.Directory<Path.PartitionedNonEmpty<Path.Partition>>

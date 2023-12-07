@@ -2,7 +2,7 @@ import { CID } from 'multiformats'
 import type { BlockStore, PrivateForest, PrivateNode, PublicNode } from 'wnfs'
 import { AccessKey, PublicFile } from 'wnfs'
 
-import * as Path from './path/index.js'
+import * as Path from './path.js'
 import * as Mutations from './mutations.js'
 import * as Queries from './queries.js'
 

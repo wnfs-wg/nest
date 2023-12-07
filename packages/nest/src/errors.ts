@@ -1,4 +1,4 @@
-import * as Path from './path/index.js'
+import * as Path from './path.js'
 
 export function throwNoAccess(
   path: Path.DistinctivePath<Path.Segments>,

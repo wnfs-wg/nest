@@ -188,12 +188,12 @@ export function fromPosix(path: string): DistinctivePath<Segments> {
  */
 export function toPosix(
   path: DistinctivePath<Segments>,
-  { absolute }: { absolute: boolean } = { absolute: false }
+  options?: { absolute?: boolean }
 ): string {
-  const prefix = absolute ? '/' : ''
+  const prefix = options?.absolute === true ? '/' : ''
   const joinedPath = unwrap(path).join('/')
   if (isDirectory(path))
-    return prefix + joinedPath + (joinedPath.length ? '/' : '')
+    return prefix + joinedPath + (joinedPath.length > 0 ? '/' : '')
   return prefix + joinedPath
 }
 
@@ -266,7 +266,7 @@ export function combine(
   a: DirectoryPath<Segments>,
   b: DistinctivePath<Segments>
 ): DistinctivePath<Segments> {
-  return map((p) => unwrap(a).concat(p), b)
+  return map((p) => [...unwrap(a), ...p], b)
 }
 
 /**
@@ -404,7 +404,7 @@ export function parent(
   path: DistinctivePath<SegmentsNonEmpty>
 ): DirectoryPath<Segments>
 export function parent(path: DistinctivePath<[Segment]>): DirectoryPath<[]>
-export function parent(path: DistinctivePath<[]>): null
+export function parent(path: DistinctivePath<[]>): undefined
 export function parent(
   path: DistinctivePath<Segments>
 ): DirectoryPath<Segments> | undefined

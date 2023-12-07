@@ -1,4 +1,4 @@
-import * as Path from '../path/index.js'
+import * as Path from '../path.js'
 import type { FileSystem } from '../class.js'
 
 /**

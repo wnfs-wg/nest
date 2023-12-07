@@ -4,7 +4,7 @@ import type {
   PrivateNode,
   PublicDirectory,
 } from 'wnfs'
-import type * as Path from '../path/index.js'
+import type * as Path from '../path.js'
 
 // 🧩
 

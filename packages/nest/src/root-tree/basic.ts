@@ -9,12 +9,11 @@ import { webcrypto } from 'iso-base/crypto'
 import { CID } from 'multiformats'
 import { PrivateForest, PublicDirectory } from 'wnfs'
 
-// import * as Unix from './unix.js'
-
+import * as Unix from '../unix.js'
 import * as Store from '../store.js'
 import * as Version from '../version.js'
 
-import { RootBranch } from '../path/index.js'
+import { RootBranch } from '../path.js'
 import { makeRngInterface } from '../rng.js'
 import type { RootTree } from '../root-tree.js'
 
@@ -78,9 +77,10 @@ export class BasicRootTree implements RootTree {
     blockstore: Blockstore
   ): Promise<BasicRootTree> {
     const currentTime = new Date()
+    const wnfsStore = Store.wnfsStoreInterface(blockstore)
 
     // Retrieve links
-    const links = await linksFromCID(depot, cid)
+    const links = await linksFromCID(cid, blockstore)
 
     // Retrieve all pieces
     async function handleLink<T>(
@@ -88,60 +88,58 @@ export class BasicRootTree implements RootTree {
       present: (cid: CID) => Promise<T>,
       missing: () => T | Promise<T>
     ): Promise<T> {
-      if (links[name]) {
-        return present(links[name])
-      } else {
+      if (links[name] === undefined) {
         console.warn(
           `Missing '${name}' link in the root tree from '${cid.toString()}'. Creating a new link.`
         )
         return await missing()
       }
+
+      return await present(links[name])
     }
 
     const exchangeRoot = await handleLink(
       RootBranch.Exchange,
-      (cid) => PublicDirectory.load(cid.bytes, blockStore),
+      async (cid) => await PublicDirectory.load(cid.bytes, wnfsStore),
       () => new PublicDirectory(currentTime)
     )
 
     const publicRoot = await handleLink(
       RootBranch.Public,
-      (cid) => PublicDirectory.load(cid.bytes, blockStore),
+      async (cid) => await PublicDirectory.load(cid.bytes, wnfsStore),
       () => new PublicDirectory(currentTime)
     )
 
     const privateForest = await handleLink(
       RootBranch.Private,
-      (cid) => PrivateForest.load(cid.bytes, blockStore),
-      () => createPrivateForest()
+      async (cid) => await PrivateForest.load(cid.bytes, wnfsStore),
+      async () => await createPrivateForest()
     )
 
     const unix = await handleLink(
       RootBranch.Unix,
-      (cid) => Unix.load(cid, depot),
+      async (cid) => await Unix.load(cid, blockstore),
       () => Unix.createDirectory(currentTime)
     )
 
     const version = await handleLink(
       RootBranch.Version,
       async (cid) => {
-        const string = new TextDecoder().decode(await DAG.getRaw(depot, cid))
-        const semVer = SemVer.fromString(string)
-        if (!semVer)
-          throw new Error(`Invalid file system version detected '${string}'`)
-        return semVer
+        return new TextDecoder().decode(Raw.decode(await blockstore.get(cid)))
       },
-      () => Version.v2
+      () => Version.latest
     )
 
     // Compose
-    return {
+    return new BasicRootTree({
+      blockstore,
+
       exchangeRoot,
       publicRoot,
       privateForest,
       unix,
       version,
-    }
+    })
   }
 
   async commit(_privateForest: PrivateForest): Promise<BasicRootTree> {
@@ -180,19 +178,22 @@ export class BasicRootTree implements RootTree {
   }
 
   async store(): Promise<CID> {
-    const wnfsStore = Store.wnfsStore(this.#blockstore)
+    const wnfsStore = Store.wnfsStoreInterface(this.#blockstore)
 
     // Store all pieces
     const exchangeRoot = await this.#exchangeRoot.store(wnfsStore)
     const privateForest = await this.privateForest.store(wnfsStore)
     const publicRoot = await this.publicRoot.store(wnfsStore)
+    const unixTree = await Store.store(
+      DagPB.encode(this.#unix),
+      DagPB.code,
+      this.#blockstore
+    )
 
-    const unixTree = await Unix.store(this.#unix, this.#blockstore)
-
-    const versionBytes = Raw.encode(new TextEncoder().encode(this.#version))
-    const version = await this.#blockstore.put(
-      await Store.cid(versionBytes, Raw.code),
-      versionBytes
+    const version = await Store.store(
+      Raw.encode(new TextEncoder().encode(this.#version)),
+      Raw.code,
+      this.#blockstore
     )
 
     // Store root tree
@@ -220,15 +221,9 @@ export class BasicRootTree implements RootTree {
     ]
 
     const node = DagPB.createNode(new Uint8Array([8, 1]), links)
-    const nodeBytes = DagPB.encode(node)
-
-    const rootCID = await this.#blockstore.put(
-      await Store.cid(nodeBytes, DagPB.code),
-      nodeBytes
-    )
 
     // Fin
-    return rootCID
+    return await Store.store(DagPB.encode(node), DagPB.code, this.#blockstore)
   }
 }
 
@@ -267,11 +262,11 @@ async function createPrivateForest(): Promise<PrivateForest> {
  */
 export async function linksFromCID(
   cid: CID,
-  blockStore: Blockstore
+  blockstore: Blockstore
 ): Promise<Record<string, CID>> {
   // Get the root node,
   // which is stored as DAG-PB.
-  const node = DagPB.decode(await blockStore.get(cid))
+  const node = DagPB.decode(await blockstore.get(cid))
 
   return node.Links.reduce((acc: Record<string, CID>, link: PBLink) => {
     return typeof link.Name === 'string'

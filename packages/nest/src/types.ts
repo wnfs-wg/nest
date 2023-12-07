@@ -1,5 +1,5 @@
 import type { CID } from 'multiformats'
-import type * as Path from './path/index.js'
+import type * as Path from './path.js'
 
 /** @group File System */
 export type AnySupportedDataType<V> =

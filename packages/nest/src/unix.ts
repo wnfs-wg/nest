@@ -1,3 +1,4 @@
+import type { Blockstore } from 'interface-blockstore'
 import type { CID } from 'multiformats'
 import type { PBLink, PBNode } from '@ipld/dag-pb'
 
@@ -8,8 +9,8 @@ import { exporter } from 'ipfs-unixfs-exporter'
 import { importBytes as importer } from 'ipfs-unixfs-importer'
 import all from 'it-all'
 
-import type { BlockStore } from './store.js'
-import * as Path from './path/index.js'
+import * as Path from './path.js'
+import * as Store from './store.js'
 
 /**
  * Create a UnixFS directory.
@@ -31,7 +32,7 @@ export function createDirectory(
  */
 export async function exportFile(
   cid: CID,
-  store: BlockStore,
+  store: Blockstore,
   options?: { offset: number; length: number }
 ): Promise<Uint8Array> {
   const offset = options?.offset
@@ -53,7 +54,7 @@ export async function exportFile(
  */
 export async function importFile(
   bytes: Uint8Array,
-  store: BlockStore
+  store: Blockstore
 ): Promise<CID> {
   const { cid } = await importer(bytes, store)
   return cid
@@ -66,7 +67,7 @@ export async function importFile(
 export async function insertNodeIntoTree(
   node: PBNode,
   path: Path.Distinctive<Path.Segments>,
-  store: BlockStore,
+  store: Blockstore,
   fileCID?: CID
 ): Promise<PBNode> {
   const pathKind = Path.kind(path)
@@ -77,25 +78,28 @@ export async function insertNodeIntoTree(
   // Directory
   // ---------
   if (Path.length(path) > 1) {
-    let dirNode: PBNode
-
-    if (link?.Hash) {
-      dirNode = await load(link.Hash, depot)
-    } else {
-      dirNode = createDirectory(new Date())
-    }
+    const dirNode: PBNode =
+      link?.Hash === undefined
+        ? createDirectory(new Date())
+        : await load(link.Hash, store)
 
     const newDirNode = await insertNodeIntoTree(
       dirNode,
       Path.fromKind(pathKind, ...pathParts.slice(1)),
-      depot,
+      store,
       fileCID
     )
 
-    const dirCID = await store(newDirNode, depot)
-    const links = link
-      ? replaceLinkHash(node.Links, name, dirCID)
-      : addLink(node.Links, name, dirCID)
+    const dirCID = await Store.store(
+      DagPB.encode(newDirNode),
+      DagPB.code,
+      store
+    )
+
+    const links =
+      link === undefined
+        ? addLink(node.Links, name, dirCID)
+        : replaceLinkHash(node.Links, name, dirCID)
 
     return { ...node, Links: links }
   }
@@ -104,21 +108,23 @@ export async function insertNodeIntoTree(
   // -----------------
   // Directory
   if (pathKind === 'directory') {
-    if (link) return node
+    if (link !== undefined) return node
 
     const dirNode = createDirectory(new Date())
-    const dirCID = await store(dirNode, depot)
+    const dirCID = await Store.store(DagPB.encode(dirNode), DagPB.code, store)
 
     const links = addLink(node.Links, name, dirCID)
     return { ...node, Links: links }
   }
 
   // File
-  if (!fileCID) throw new Error('Need a file CID when adding a UnixFS file')
+  if (fileCID === undefined)
+    throw new Error('Need a file CID when adding a UnixFS file')
 
-  const links = link
-    ? replaceLinkHash(node.Links, name, fileCID)
-    : addLink(node.Links, name, fileCID)
+  const links =
+    link === undefined
+      ? addLink(node.Links, name, fileCID)
+      : replaceLinkHash(node.Links, name, fileCID)
 
   return { ...node, Links: links }
 }
@@ -126,8 +132,8 @@ export async function insertNodeIntoTree(
 /**
  * Load a UnixFS node.
  */
-export async function load(cid: CID, store: BlockStore): Promise<PBNode> {
-  return DagPB.decode(await depot.getBlock(cid))
+export async function load(cid: CID, store: Blockstore): Promise<PBNode> {
+  return DagPB.decode(await store.get(cid))
 }
 
 /**
@@ -136,7 +142,7 @@ export async function load(cid: CID, store: BlockStore): Promise<PBNode> {
 export async function removeNodeFromTree(
   node: PBNode,
   path: Path.Distinctive<Path.Segments>,
-  store: BlockStore
+  store: Blockstore
 ): Promise<PBNode> {
   const pathKind = Path.kind(path)
   const pathParts = Path.unwrap(path)
@@ -148,37 +154,36 @@ export async function removeNodeFromTree(
   if (Path.length(path) > 1) {
     let dirNode: PBNode
 
-    if (link?.Hash) {
-      dirNode = await load(link.Hash, depot)
-    } else {
+    if (link?.Hash === undefined) {
       return node
+    } else {
+      dirNode = await load(link.Hash, store)
     }
 
     const newDirNode = await removeNodeFromTree(
       dirNode,
       Path.fromKind(pathKind, ...pathParts.slice(1)),
-      depot
+      store
     )
 
-    const dirCID = await store(newDirNode, depot)
-    const links = link
-      ? replaceLinkHash(node.Links, name, dirCID)
-      : addLink(node.Links, name, dirCID)
+    const dirCID = await Store.store(
+      DagPB.encode(newDirNode),
+      DagPB.code,
+      store
+    )
+
+    const links =
+      link === undefined
+        ? addLink(node.Links, name, dirCID)
+        : replaceLinkHash(node.Links, name, dirCID)
 
     return { ...node, Links: links }
   }
 
   // Last part of path
   // -----------------
-  if (!link) return node
+  if (link === undefined) return node
   return { ...node, Links: node.Links.filter((l) => l.Name !== name) }
-}
-
-/**
- * Store a UnixFS node.
- */
-export async function store(node: PBNode, store: BlockStore): Promise<CID> {
-  return depot.putBlock(DagPB.encode(node), DagPB.code)
 }
 
 // ㊙️

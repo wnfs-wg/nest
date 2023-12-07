@@ -10,9 +10,9 @@ import type {
 import { PrivateNode } from 'wnfs'
 import { CID } from 'multiformats'
 
-import * as Path from './path/index.js'
+import * as Path from './path.js'
 
-import type { Partitioned } from './path/index.js'
+import type { Partitioned } from './path.js'
 import type { Rng } from './rng.js'
 import type { RootTree } from './root-tree.js'
 import type { DirectoryItem, DirectoryItemWithKind } from './types.js'

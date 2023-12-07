@@ -1,10 +1,6 @@
-import * as Path from './path/index.js'
+import * as Path from './path.js'
 
-import type {
-  Partition,
-  Partitioned,
-  PartitionedNonEmpty,
-} from './path/index.js'
+import type { Partition, Partitioned, PartitionedNonEmpty } from './path.js'
 import type { PartitionDiscovery, PartitionDiscoveryNonEmpty } from './types.js'
 import type {
   MountedPrivateNode,
