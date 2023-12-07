@@ -61,7 +61,7 @@
     "wnfs": "^0.1.27"
   },
   "devDependencies": {
-    "@types/assert": "^1.5.9",
+    "@types/assert": "^1.5.10",
     "@types/mocha": "^10.0.4",
     "@types/node": "^20.9.0",
     "assert": "^2.1.0",
