@@ -1,0 +1,107 @@
+{
+  "name": "package1",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Example package description.",
+  "author": "Hugo Dias <hugomrdias@gmail.com> (hugodias.me)",
+  "license": "(Apache-2.0 AND MIT)",
+  "homepage": "https://github.com/fission-codes/js-template/tree/main/packages/package1",
+  "repository": {
+    "url": "fission-codes/js-template",
+    "directory": "packages/package1"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./crypto": {
+      "types": "./dist/src/crypto.d.ts",
+      "browser": "./src/crypto-browser.js",
+      "default": "./src/crypto.js"
+    }
+  },
+  "main": "src/index.js",
+  "types": "dist/src/index.d.ts",
+  "browser": {
+    "crypto": false,
+    "./src/crypto.js": "./src/crypto-browser.js"
+  },
+  "typesVersions": {
+    "*": {
+      "module1": [
+        "dist/src/crypto"
+      ]
+    }
+  },
+  "files": [
+    "src",
+    "dist/src/*.d.ts",
+    "dist/src/*.d.ts.map"
+  ],
+  "scripts": {
+    "lint": "tsc --build && eslint . && prettier --check '**/*.{js,ts,yml,json}' --ignore-path ../../.gitignore",
+    "build": "tsc --build",
+    "test": "pnpm run test:node && pnpm run test:browser",
+    "test:node": "mocha 'test/**/!(*.browser).test.js'",
+    "test:browser": "playwright-test 'test/**/!(*.node).test.js'"
+  },
+  "dependencies": {
+    "@ipld/dag-cbor": "^9.0.6",
+    "@ipld/dag-pb": "^4.0.6",
+    "compare-versions": "^6.1.0",
+    "interface-blockstore": "^5.2.7",
+    "ipfs-unixfs": "^11.1.0",
+    "ipfs-unixfs-exporter": "^13.2.2",
+    "ipfs-unixfs-importer": "^15.2.1",
+    "iso-base": "^2.0.1",
+    "it-all": "^3.0.4",
+    "multiformats": "^12.1.3",
+    "uint8arrays": "^4.0.9",
+    "wnfs": "^0.1.27"
+  },
+  "devDependencies": {
+    "@types/assert": "^1.5.9",
+    "@types/mocha": "^10.0.4",
+    "@types/node": "^20.9.0",
+    "assert": "^2.1.0",
+    "mocha": "^10.2.0",
+    "playwright-test": "^12.6.0"
+  },
+  "publishConfig": {
+    "provenance": true
+  },
+  "eslintConfig": {
+    "extends": [
+      "@fission-codes"
+    ],
+    "env": {
+      "mocha": true
+    },
+    "ignorePatterns": [
+      "dist"
+    ],
+    "rules": {
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_",
+          "destructuredArrayIgnorePattern": "^_",
+          "varsIgnorePattern": "^_"
+        }
+      ],
+      "unicorn/no-array-reduce": [
+        "off"
+      ]
+    }
+  },
+  "depcheck": {
+    "specials": [
+      "bin"
+    ],
+    "ignores": [
+      "@types/*",
+      "assert"
+    ]
+  }
+}
