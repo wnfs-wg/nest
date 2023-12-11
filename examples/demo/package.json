@@ -21,7 +21,7 @@
     "@babel/core": "^7.23.5",
     "@types/node": "^20.9.0",
     "typescript": "5.2.2",
-    "vite": "^5.0.6"
+    "vite": "^5.0.7"
   },
   "eslintConfig": {
     "extends": [
