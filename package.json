@@ -24,7 +24,7 @@
     "@fission-codes/eslint-config": "^0.0.3",
     "depcheck": "^1.4.7",
     "lint-staged": "^15.1.0",
-    "prettier": "3.1.0",
+    "prettier": "3.1.1",
     "simple-git-hooks": "^2.9.0",
     "typedoc": "^0.25.4",
     "typedoc-plugin-missing-exports": "^2.1.0",
