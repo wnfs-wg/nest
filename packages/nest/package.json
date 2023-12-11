@@ -66,7 +66,7 @@
     "@types/node": "^20.9.0",
     "assert": "^2.1.0",
     "mocha": "^10.2.0",
-    "playwright-test": "^12.6.0"
+    "playwright-test": "^14.0.0"
   },
   "publishConfig": {
     "provenance": true
