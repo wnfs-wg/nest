@@ -5,7 +5,6 @@ import * as DagPB from '@ipld/dag-pb'
 import * as Raw from 'multiformats/codecs/raw'
 import * as Uint8Arrays from 'uint8arrays'
 
-import { webcrypto } from 'iso-base/crypto'
 import { CID } from 'multiformats/cid'
 import { PrivateForest, PublicDirectory } from 'wnfs'
 
@@ -20,6 +19,7 @@ import type { FileSystemChange } from '../types.js'
 
 import { RootBranch } from '../path.js'
 import { makeRngInterface } from '../rng.js'
+import { webcrypto } from '../crypto.js'
 
 // CLASS
 

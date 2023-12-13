@@ -3,12 +3,12 @@
   "type": "module",
   "version": "0.0.1",
   "description": "Example package description.",
-  "author": "Hugo Dias <hugomrdias@gmail.com> (hugodias.me)",
+  "author": "Steven Vandevelde <icid.asset@gmail.com> (tokono.ma)",
   "license": "(Apache-2.0 AND MIT)",
-  "homepage": "https://github.com/fission-codes/js-template/tree/main/packages/package1",
+  "homepage": "https://github.com/wnfs-wg/nest/tree/main/packages/nest",
   "repository": {
-    "url": "fission-codes/js-template",
-    "directory": "packages/package1"
+    "url": "wnfs-wg/nest",
+    "directory": "packages/nest"
   },
   "exports": {
     ".": {
@@ -41,7 +41,6 @@
     "test:browser": "playwright-test 'test/**/!(*.node).test.ts' --timeout 30000"
   },
   "dependencies": {
-    "@ipld/dag-cbor": "^9.0.6",
     "@ipld/dag-pb": "^4.0.6",
     "compare-versions": "^6.1.0",
     "debounce": "^2.0.0",
@@ -50,11 +49,10 @@
     "ipfs-unixfs": "^11.1.0",
     "ipfs-unixfs-exporter": "^13.2.2",
     "ipfs-unixfs-importer": "^15.2.1",
-    "iso-base": "^2.0.1",
     "it-all": "^3.0.4",
     "multiformats": "^12.1.3",
     "uint8arrays": "^5.0.0",
-    "wnfs": "^0.1.27"
+    "wnfs": "0.1.27"
   },
   "devDependencies": {
     "@types/assert": "^1.5.9",

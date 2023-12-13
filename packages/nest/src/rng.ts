@@ -1,4 +1,4 @@
-import { webcrypto } from 'iso-base/crypto'
+import { webcrypto } from './crypto.js'
 
 export interface Rng {
   randomBytes: (count: number) => Uint8Array
