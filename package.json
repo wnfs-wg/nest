@@ -1,0 +1,50 @@
+{
+  "name": "js-template",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "packageManager": "pnpm@8.6.1",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "format": "prettier --write '**/*.{js,ts,jsx,tsx,yml,json,css}' --ignore-path .gitignore",
+    "format:check": "prettier --check '**/*.{js,ts,jsx,tsx,yml,json,css}' --ignore-path .gitignore",
+    "clean": "rm -rf docs node_modules pnpm-lock.yaml packages/*/{pnpm-lock.yaml,coverage,.nyc_output,dist,node_modules} packages/*/{pnpm-lock.yaml,coverage,.nyc_output,dist,node_modules}",
+    "lint": "pnpm -r --if-present run lint",
+    "test": "pnpm -r --if-present run test",
+    "check": "pnpm -r --if-present run check",
+    "build": "pnpm -r --if-present run build",
+    "docs": "typedoc --out docs --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-zod"
+  },
+  "devDependencies": {
+    "@fission-codes/eslint-config": "^0.0.3",
+    "depcheck": "^1.4.7",
+    "lint-staged": "^15.1.0",
+    "prettier": "3.1.1",
+    "simple-git-hooks": "^2.9.0",
+    "typedoc": "^0.25.4",
+    "typedoc-plugin-missing-exports": "^2.1.0",
+    "typedoc-plugin-zod": "^1.1.0",
+    "typescript": "5.2.2"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,yml,json,css}": "prettier --write",
+    "*": "eslint --fix"
+  },
+  "prettier": "@fission-codes/eslint-config/prettier.config.js",
+  "eslintConfig": {
+    "extends": [
+      "@fission-codes"
+    ],
+    "ignorePatterns": [
+      "docs"
+    ]
+  }
+}
