@@ -15,7 +15,7 @@ import * as Unix from '../unix.js'
 import * as Version from '../version.js'
 
 import type { RootTree } from '../root-tree.js'
-import type { FileSystemChange } from '../types.js'
+import type { Modification } from '../types.js'
 
 import { RootBranch } from '../path.js'
 import { makeRngInterface } from '../rng.js'
@@ -150,7 +150,7 @@ export class BasicRootTree implements RootTree {
 
   async replacePrivateForest(
     forest: PrivateForest,
-    _changes: FileSystemChange[]
+    _changes: Modification[]
   ): Promise<RootTree> {
     return new BasicRootTree({
       blockstore: this.#blockstore,
@@ -169,7 +169,7 @@ export class BasicRootTree implements RootTree {
 
   async replacePublicRoot(
     dir: PublicDirectory,
-    changes: FileSystemChange[]
+    changes: Modification[]
   ): Promise<RootTree> {
     const treeWithNewPublicRoot = new BasicRootTree({
       blockstore: this.#blockstore,

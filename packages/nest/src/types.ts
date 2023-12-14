@@ -6,9 +6,9 @@ export type AnySupportedDataType<V> =
   | Record<string | number | symbol, V>
   | string
 
-export interface DataRootChange {
-  dataRoot: CID
-}
+export type CommitVerifier = (
+  changes: Modification[]
+) => Promise<{ commit: boolean }>
 
 export type DataType = 'bytes' | 'json' | 'utf8'
 
@@ -30,7 +30,7 @@ export type DirectoryItemWithKind = DirectoryItem & {
   path: Path.Distinctive<Path.PartitionedNonEmpty<Path.Partition>>
 }
 
-export interface FileSystemChange {
+export interface Modification {
   path: Path.Distinctive<Path.Partitioned<Path.Partition>>
   type: MutationType
 }
@@ -39,10 +39,13 @@ export interface MutationOptions {
   skipPublish?: boolean
 }
 
-export type MutationResult<P extends Path.Partition> = P extends Path.Public
-  ? PublicMutationResult
+export type MutationResult<
+  P extends Path.Partition,
+  Extension = unknown,
+> = P extends Path.Public
+  ? PublicMutationResult<Extension>
   : P extends Path.Private
-    ? PrivateMutationResult
+    ? PrivateMutationResult<Extension>
     : never
 
 export type MutationType = 'added-or-updated' | 'removed'
@@ -76,11 +79,15 @@ export type PartitionDiscoveryNonEmpty<P extends Path.Partition> =
         }
       : never
 
-export type PublicMutationResult = DataRootChange & {
+export type NOOP = 'no-op'
+
+export type PublicMutationResult<Extension = unknown> = {
   capsuleCID: CID
   contentCID: CID
-}
+  dataRoot: CID
+} & Extension
 
-export type PrivateMutationResult = DataRootChange & {
+export type PrivateMutationResult<Extension = unknown> = {
   capsuleKey: Uint8Array
-}
+  dataRoot: CID
+} & Extension

@@ -2,7 +2,7 @@ import type { Blockstore } from 'interface-blockstore'
 import type { CID } from 'multiformats'
 import type { PrivateForest, PublicDirectory } from 'wnfs'
 
-import type { FileSystemChange } from './types.js'
+import type { Modification } from './types.js'
 
 /**
  * The tree that ties different file systems together.
@@ -11,12 +11,12 @@ export abstract class RootTree {
   abstract privateForest(): PrivateForest
   abstract replacePrivateForest(
     forest: PrivateForest,
-    changes: FileSystemChange[]
+    changes: Modification[]
   ): Promise<RootTree>
   abstract publicRoot(): PublicDirectory
   abstract replacePublicRoot(
     dir: PublicDirectory,
-    changes: FileSystemChange[]
+    changes: Modification[]
   ): Promise<RootTree>
 
   abstract clone(): RootTree

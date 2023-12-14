@@ -10,6 +10,7 @@ import { MemoryBlockstore } from 'blockstore-core/memory'
 import * as Path from '../src/path.js'
 import * as Unix from '../src/unix.js'
 
+import type { Modification } from '../src/types.js'
 import { FileSystem } from '../src/class.js'
 
 import {
@@ -1043,4 +1044,17 @@ describe('File System Class', () => {
   //     assert(error)
   //   }
   // })
+
+  it("doesn't commit a transaction when onCommit returns `false`", async () => {
+    fs = await FileSystem.create({
+      blockstore,
+      ...fsOpts,
+      onCommit: async (_changes: Modification[]) => ({ commit: false }),
+    })
+
+    mounts = await fs.mountPrivateNodes([{ path: Path.root() }])
+
+    // TODO:
+    // await fs.write(Path.file('private', 'test', 'file'), 'utf8', '🔥')
+  })
 })

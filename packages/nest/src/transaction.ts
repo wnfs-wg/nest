@@ -27,11 +27,13 @@ import type { RootTree } from './root-tree.js'
 
 import type {
   AnySupportedDataType,
+  CommitVerifier,
   DataForType,
   DataType,
   DirectoryItem,
   DirectoryItemWithKind,
   MutationType,
+  NOOP,
 } from './types.js'
 
 import type {
@@ -44,6 +46,7 @@ import type {
 /** @group File System */
 export class TransactionContext {
   readonly #blockstore: Blockstore
+  readonly #onCommit: CommitVerifier
   readonly #rng: Rng
 
   #privateNodes: MountedPrivateNodes
@@ -57,11 +60,13 @@ export class TransactionContext {
   /** @internal */
   constructor(
     blockstore: Blockstore,
+    onCommit: CommitVerifier,
     privateNodes: MountedPrivateNodes,
     rng: Rng,
     rootTree: RootTree
   ) {
     this.#blockstore = blockstore
+    this.#onCommit = onCommit
     this.#privateNodes = privateNodes
     this.#rng = rng
     this.#rootTree = rootTree
@@ -70,15 +75,22 @@ export class TransactionContext {
   }
 
   /** @internal */
-  static async commit(context: TransactionContext): Promise<{
-    changes: Array<{
-      path: Path.Distinctive<Partitioned<Partition>>
-      type: MutationType
-    }>
-    privateNodes: MountedPrivateNodes
-    rootTree: RootTree
-  }> {
+  static async commit(context: TransactionContext): Promise<
+    | {
+        changes: Array<{
+          path: Path.Distinctive<Partitioned<Partition>>
+          type: MutationType
+        }>
+        privateNodes: MountedPrivateNodes
+        rootTree: RootTree
+      }
+    | NOOP
+  > {
     const changes = [...context.#changes]
+
+    // Verify
+    const { commit } = await context.#onCommit([...changes])
+    if (!commit) return 'no-op'
 
     // Private forest
     const newForest = await changes.reduce(

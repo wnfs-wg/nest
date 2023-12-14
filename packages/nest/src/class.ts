@@ -13,14 +13,15 @@ import Emittery, {
 
 import type {
   AnySupportedDataType,
+  CommitVerifier,
   DataForType,
-  DataRootChange,
   DataType,
   DirectoryItem,
   DirectoryItemWithKind,
-  FileSystemChange,
+  Modification,
   MutationOptions,
   MutationResult,
+  NOOP,
   PrivateMutationResult,
   PublicMutationResult,
 } from './types.js'
@@ -54,6 +55,7 @@ import { BasicRootTree } from './root-tree/basic.js'
 
 export interface Options {
   blockstore: Blockstore
+  onCommit?: CommitVerifier
   rootTreeClass?: typeof RootTree
   settleTimeBeforePublish?: number
 }
@@ -62,6 +64,7 @@ export class FileSystem {
   readonly #blockstore: Blockstore
   readonly #debouncedDataRootUpdate: debounce.DebouncedFunction<any>
   readonly #eventEmitter: Emittery<Events>
+  readonly #onCommit: CommitVerifier
   readonly #rng: Rng.Rng
 
   #privateNodes: MountedPrivateNodes = {}
@@ -70,11 +73,13 @@ export class FileSystem {
   /** @hidden */
   constructor(
     blockstore: Blockstore,
+    onCommit: CommitVerifier | undefined,
     rootTree: RootTree,
     settleTimeBeforePublish: number
   ) {
     this.#blockstore = blockstore
     this.#eventEmitter = new Emittery<Events>()
+    this.#onCommit = onCommit ?? (async () => ({ commit: true }))
     this.#rng = Rng.makeRngInterface()
     this.#rootTree = rootTree
 
@@ -96,23 +101,35 @@ export class FileSystem {
    * Creates a file system with an empty public tree & an empty private tree at the root.
    */
   static async create(opts: Options): Promise<FileSystem> {
-    const { blockstore, rootTreeClass, settleTimeBeforePublish } = opts
+    const { blockstore, onCommit, rootTreeClass, settleTimeBeforePublish } =
+      opts
     const rootTree = await (rootTreeClass ?? BasicRootTree).create(blockstore)
 
-    return new FileSystem(blockstore, rootTree, settleTimeBeforePublish ?? 2500)
+    return new FileSystem(
+      blockstore,
+      onCommit,
+      rootTree,
+      settleTimeBeforePublish ?? 2500
+    )
   }
 
   /**
    * Loads an existing file system from a CID.
    */
   static async fromCID(cid: CID, opts: Options): Promise<FileSystem> {
-    const { blockstore, rootTreeClass, settleTimeBeforePublish } = opts
+    const { blockstore, onCommit, rootTreeClass, settleTimeBeforePublish } =
+      opts
     const rootTree = await (rootTreeClass ?? BasicRootTree).fromCID(
       blockstore,
       cid
     )
 
-    return new FileSystem(blockstore, rootTree, settleTimeBeforePublish ?? 2500)
+    return new FileSystem(
+      blockstore,
+      onCommit,
+      rootTree,
+      settleTimeBeforePublish ?? 2500
+    )
   }
 
   // EVENTS
@@ -403,7 +420,7 @@ export class FileSystem {
       | Path.File<PartitionedNonEmpty<Partition>>
       | Path.Directory<Partitioned<Partition>>,
     mutationOptions: MutationOptions = {}
-  ): Promise<MutationResult<Partition> | null> {
+  ): Promise<MutationResult<Partition>> {
     return await this.#infusedTransaction(
       async (t) => {
         await t.copy(from, to)
@@ -421,15 +438,16 @@ export class FileSystem {
     path: Path.Directory<PartitionedNonEmpty<P>>,
     mutationOptions?: MutationOptions
   ): Promise<
-    MutationResult<P> & { path: Path.Directory<PartitionedNonEmpty<Partition>> }
+    MutationResult<P, { path: Path.Directory<PartitionedNonEmpty<Partition>> }>
   >
   async createDirectory(
     path: Path.Directory<PartitionedNonEmpty<Partition>>,
     mutationOptions: MutationOptions = {}
   ): Promise<
-    MutationResult<Partition> & {
-      path: Path.Directory<PartitionedNonEmpty<Partition>>
-    }
+    MutationResult<
+      Partition,
+      { path: Path.Directory<PartitionedNonEmpty<Partition>> }
+    >
   > {
     let finalPath = path
 
@@ -455,7 +473,7 @@ export class FileSystem {
     data: DataForType<D, V>,
     mutationOptions?: MutationOptions
   ): Promise<
-    MutationResult<P> & { path: Path.File<PartitionedNonEmpty<Partition>> }
+    MutationResult<P, { path: Path.File<PartitionedNonEmpty<Partition>> }>
   >
   async createFile<D extends DataType, V = unknown>(
     path: Path.File<PartitionedNonEmpty<Partition>>,
@@ -463,9 +481,10 @@ export class FileSystem {
     data: DataForType<D, V>,
     mutationOptions: MutationOptions = {}
   ): Promise<
-    MutationResult<Partition> & {
-      path: Path.File<PartitionedNonEmpty<Partition>>
-    }
+    MutationResult<
+      Partition,
+      { path: Path.File<PartitionedNonEmpty<Partition>> }
+    >
   > {
     let finalPath = path
 
@@ -534,10 +553,14 @@ export class FileSystem {
   async remove(
     path: Path.Distinctive<PartitionedNonEmpty<Partition>>,
     mutationOptions: MutationOptions = {}
-  ): Promise<DataRootChange> {
+  ): Promise<NOOP | { dataRoot: CID }> {
     const transactionResult = await this.transaction(async (t) => {
       await t.remove(path)
     }, mutationOptions)
+
+    if (transactionResult === 'no-op') {
+      return 'no-op'
+    }
 
     return {
       dataRoot: transactionResult.dataRoot,
@@ -596,18 +619,23 @@ export class FileSystem {
   async transaction(
     handler: (t: TransactionContext) => Promise<void>,
     mutationOptions: MutationOptions = {}
-  ): Promise<{
-    changes: FileSystemChange[]
-    dataRoot: CID
-  }> {
+  ): Promise<
+    | {
+        changes: Modification[]
+        dataRoot: CID
+      }
+    | NOOP
+  > {
     const context = this.#transactionContext()
 
     // Execute handler
     await handler(context)
 
     // Commit transaction
-    const { changes, privateNodes, rootTree } =
-      await TransactionContext.commit(context)
+    const commitResult = await TransactionContext.commit(context)
+    if (commitResult === 'no-op') return 'no-op'
+
+    const { changes, privateNodes, rootTree } = commitResult
 
     this.#privateNodes = privateNodes
     this.#rootTree = rootTree
@@ -668,6 +696,12 @@ export class FileSystem {
     mutationOptions: MutationOptions = {}
   ): Promise<MutationResult<Partition>> {
     const transactionResult = await this.transaction(handler, mutationOptions)
+
+    const dataRoot =
+      transactionResult === 'no-op'
+        ? await this.calculateDataRoot()
+        : transactionResult.dataRoot
+
     const partition = determinePartition(path)
 
     switch (partition.name) {
@@ -693,7 +727,7 @@ export class FileSystem {
             : capsuleCID
 
         return {
-          dataRoot: transactionResult.dataRoot,
+          dataRoot,
           capsuleCID,
           contentCID,
         }
@@ -733,7 +767,7 @@ export class FileSystem {
               .then(([key]) => key)
 
         return {
-          dataRoot: transactionResult.dataRoot,
+          dataRoot,
           capsuleKey: accessKey.toBytes(),
         }
       }
@@ -743,6 +777,7 @@ export class FileSystem {
   #transactionContext(): TransactionContext {
     return new TransactionContext(
       this.#blockstore,
+      this.#onCommit,
       { ...this.#privateNodes },
       this.#rng,
       this.#rootTree.clone()
