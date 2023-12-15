@@ -31,7 +31,7 @@ import { FileSystem, Path } from '@wnfs-wg/nest'
 import { MemoryBlockstore } from 'blockstore-core/memory'
 ```
 
-Scenario 1:
+Scenario 1:<br />
 🚀 Create a new file system, create a new file and read it back.
 
 ```ts
@@ -46,14 +46,14 @@ await fs.write(
 const contents = await fs.read(Path.file('private', 'file'), 'utf8')
 ```
 
-Scenario 2:
+Scenario 2:<br />
 🛰️ Listen to commit and/or publish events.
 
-_A commit is a (optionally verified) modification to the file system,
+_A commit is a (optionally verified) modification to the file system,<br />
 and publishes are the debounced events resulting from the commits._
 
-This will allow us the store the latest state of our file system,
-for this we need what we call the data root. This is the top-level CID
+This will allow us the store the latest state of our file system,<br />
+for this we need what we call the data root. This is the top-level CID<br />
 of our root tree, the pointer to our file system.
 
 ```ts
@@ -79,7 +79,7 @@ fs.on('publish', ({ dataRoot }) => {
 })
 ```
 
-Scenario 3:
+Scenario 3:<br />
 🧳 Load a file system from a previous pointer.
 
 ```ts
