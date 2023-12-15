@@ -80,7 +80,7 @@ fs.on('commit', ({ dataRoot, modifications }) => {
 fs.on('publish', ({ dataRoot }) => {
   // Commit approved and performed ✅
   // Debounced and delayed ✅
-  fsPointer
+  fsPointer = dataRoot
 })
 ```
 
