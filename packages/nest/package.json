@@ -15,10 +15,38 @@
       "types": "./dist/src/index.d.ts",
       "default": "./src/index.js"
     },
+    "./app-info": {
+      "types": "./dist/src/app-info.d.ts",
+      "default": "./src/app-info.js"
+    },
+    "./class": {
+      "types": "./dist/src/class.d.ts",
+      "default": "./src/class.js"
+    },
     "./crypto": {
       "types": "./dist/src/crypto.d.ts",
       "browser": "./src/crypto-browser.js",
       "default": "./src/crypto.js"
+    },
+    "./errors": {
+      "types": "./dist/src/errors.d.ts",
+      "default": "./src/errors.js"
+    },
+    "./events": {
+      "types": "./dist/src/events.d.ts",
+      "default": "./src/events.js"
+    },
+    "./path": {
+      "types": "./dist/src/path.d.ts",
+      "default": "./src/path.js"
+    },
+    "./types": {
+      "types": "./dist/src/types.d.ts",
+      "default": "./src/types.js"
+    },
+    "./version": {
+      "types": "./dist/src/version.d.ts",
+      "default": "./src/version.js"
     }
   },
   "main": "src/index.js",
@@ -29,7 +57,15 @@
   },
   "typesVersions": {
     "*": {
-      "module1": ["dist/src/crypto"]
+      ".": ["dist/src/index"],
+      "app-info": ["dist/src/app-info"],
+      "class": ["dist/src/class"],
+      "crypto": ["dist/src/crypto"],
+      "errors": ["dist/src/errors"],
+      "events": ["dist/src/events"],
+      "path": ["dist/src/path"],
+      "types": ["dist/src/types"],
+      "version": ["dist/src/version"]
     }
   },
   "files": ["src", "dist/src/*.d.ts", "dist/src/*.d.ts.map"],
@@ -71,7 +107,6 @@
   },
   "eslintConfig": {
     "extends": ["@fission-codes"],
-    "reportUnusedDisableDirectives": false,
     "env": {
       "mocha": true
     },

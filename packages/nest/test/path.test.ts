@@ -272,12 +272,12 @@ describe('Path functions', () => {
 
   it('supports map', () => {
     assert.deepEqual(
-      Path.map((p) => [...p, 'bar'], Path.directory('foo')),
+      Path.map((p) => [...p, 'bar'], Path.directory('foo')), // eslint-disable-line unicorn/no-array-method-this-argument
       { directory: ['foo', 'bar'] }
     )
 
     assert.deepEqual(
-      Path.map((p) => [...p, 'bar'], Path.file('foo')),
+      Path.map((p) => [...p, 'bar'], Path.file('foo')), // eslint-disable-line unicorn/no-array-method-this-argument
       { file: ['foo', 'bar'] }
     )
   })

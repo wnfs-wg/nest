@@ -22,7 +22,7 @@ import {
 describe('File System Class', () => {
   let blockstore: Blockstore
   let fs: FileSystem
-  let mounts: Array<{
+  let _mounts: Array<{
     path: Path.Distinctive<Path.Segments>
     capsuleKey: Uint8Array
   }>
@@ -42,7 +42,7 @@ describe('File System Class', () => {
       ...fsOpts,
     })
 
-    mounts = await fs.mountPrivateNodes([{ path: Path.root() }])
+    _mounts = await fs.mountPrivateNodes([{ path: Path.root() }])
   })
 
   // LOADING
@@ -53,7 +53,11 @@ describe('File System Class', () => {
     const privatePath = Path.file('private', 'nested-private', 'private.txt')
 
     const { contentCID } = await fs.write(publicPath, 'utf8', 'public')
-    const { dataRoot } = await fs.write(privatePath, 'utf8', 'private')
+    const { capsuleKey, dataRoot } = await fs.write(
+      privatePath,
+      'utf8',
+      'private'
+    )
 
     const contentBytes = await Unix.exportFile(contentCID, blockstore)
 
@@ -63,10 +67,9 @@ describe('File System Class', () => {
       blockstore,
       ...fsOpts,
     })
+
     await loadedFs.mountPrivateNodes([
-      // TODO: Needs to be fixed in rs-wnfs
-      // { path: Path.removePartition(privatePath), capsuleKey },
-      { path: Path.root(), capsuleKey: mounts[0].capsuleKey },
+      { path: Path.removePartition(privatePath), capsuleKey },
     ])
 
     assert.equal(await loadedFs.read(publicPath, 'utf8'), 'public')
@@ -1038,7 +1041,7 @@ describe('File System Class', () => {
       onCommit: async (_modifications: Modification[]) => ({ commit: false }),
     })
 
-    mounts = await fs.mountPrivateNodes([{ path: Path.root() }])
+    _mounts = await fs.mountPrivateNodes([{ path: Path.root() }])
 
     // TODO:
     // await fs.write(Path.file('private', 'test', 'file'), 'utf8', '🔥')

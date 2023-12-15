@@ -38,9 +38,15 @@ importers:
 
   examples/demo:
     dependencies:
-      package1:
-        specifier: '*'
+      '@wnfs-wg/nest':
+        specifier: workspace:../../packages/nest
         version: link:../../packages/nest
+      blockstore-idb:
+        specifier: ^1.1.6
+        version: 1.1.6
+      uint8arrays:
+        specifier: ^5.0.0
+        version: 5.0.0
     devDependencies:
       '@babel/core':
         specifier: ^7.23.5
@@ -54,6 +60,9 @@ importers:
       vite:
         specifier: ^5.0.7
         version: 5.0.7(@types/node@20.10.4)
+      vite-plugin-wasm:
+        specifier: ^3.3.0
+        version: 3.3.0(vite@5.0.7)
 
   packages/nest:
     dependencies:
@@ -372,13 +381,11 @@ packages:
 
   /@chainsafe/is-ip@2.0.2:
     resolution: {integrity: sha512-ndGqEMG1W5WkGagaqOZHpPU172AGdxr+LD15sv3WIUvT5oCFUrG1Y0CW/v2Egwj4JXEvSibaIIIqImsm98y1nA==}
-    dev: true
 
   /@chainsafe/netmask@2.0.0:
     resolution: {integrity: sha512-I3Z+6SWUoaljh3TBzCnCxjlUyN8tA+NAk5L6m9IxvCf1BENQTePzPMis97CoN/iMW1St3WN+AWCCRp+TTBRiDg==}
     dependencies:
       '@chainsafe/is-ip': 2.0.2
-    dev: true
 
   /@es-joy/jsdoccomment@0.40.1:
     resolution: {integrity: sha512-YORCdZSusAlBrFpZ77pJjc5r1bQs5caPWtAu+WWmiSo+8XaUzseapVrfAtiRFbQWnrBxxLLEwF6f6ZG/UgCQCg==}
@@ -1130,7 +1137,6 @@ packages:
       uint8arraylist: 2.4.7
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /@libp2p/logger@4.0.2:
     resolution: {integrity: sha512-J9UMtMU9BKXNp+3c5kcI7HyWOPYg2B2E6sn1gEQckiSexTaz0wKJSlgTZ89f9F8bkC3AaC8ybXYuHbFQhwpTIg==}
@@ -1142,7 +1148,6 @@ packages:
       multiformats: 12.1.3
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /@multiformats/multiaddr@12.1.11:
     resolution: {integrity: sha512-CWG9kETEGTTMdr1T+/JEuMwFld3r3fHNP8LkLoUcLvHRy6yr8sWdotVGEDNEdDO/vrKhuD7bQBws3xMSMMyylg==}
@@ -1156,7 +1161,6 @@ packages:
       uint8arrays: 4.0.9
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /@multiformats/murmur3@2.1.7:
     resolution: {integrity: sha512-Yf0UpAaONjed+8PTt5NM/GG4Z4Ai4m1qfT7bqevjnkwRQ12K+0jxtRomirz+VJx4PokpA2St1ZSD1iMkZTqPRQ==}
@@ -1881,7 +1885,18 @@ packages:
       uint8arrays: 5.0.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
+
+  /blockstore-idb@1.1.6:
+    resolution: {integrity: sha512-00XBjq7wfLSUvxiszmLHlOm54Dcbnbj6G8YuL0iRqOUdfsdQBerXH5ajIrvlFTjh+pECkQ1RzGsmlEdnVmnEJg==}
+    dependencies:
+      blockstore-core: 4.3.8
+      idb: 7.1.1
+      interface-blockstore: 5.2.7
+      interface-store: 5.1.5
+      multiformats: 12.1.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -2308,7 +2323,6 @@ packages:
       receptacle: 1.3.2
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
@@ -3470,6 +3484,10 @@ packages:
     engines: {node: '>=16.17.0'}
     dev: true
 
+  /idb@7.1.1:
+    resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
+    dev: false
+
   /ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
@@ -3526,7 +3544,6 @@ packages:
     dependencies:
       interface-store: 5.1.5
       uint8arrays: 5.0.0
-    dev: true
 
   /interface-store@5.1.5:
     resolution: {integrity: sha512-X0KnJBk3o+YL13MxZBMwa88/b3Mdrpm0yPzkSTKDDVn9BSPH7UK6W+ZtIPO2bxKOQVmq7zqOwAnYnpfqWjb6/g==}
@@ -3884,7 +3901,6 @@ packages:
 
   /it-drain@3.0.5:
     resolution: {integrity: sha512-qYFe4SWdvs9oJGUY5bSjvmiLUMLzFEODNOQUdYdCIkuIgQF+AUB2INhM4yQ09buJ2rhHKDFxvTD/+yUq6qg0XA==}
-    dev: true
 
   /it-filter@3.0.4:
     resolution: {integrity: sha512-e0sz+st4sudK/zH6GZ/gRTRP8A/ADuJFCYDmRgMbZvR79y5+v4ZXav850bBZk5wL9zXaYZFxS1v/6Qi+Vjwh5g==}
@@ -4353,7 +4369,6 @@ packages:
 
   /ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
-    dev: true
 
   /multiformats@12.1.3:
     resolution: {integrity: sha512-eajQ/ZH7qXZQR2AgtfpmSMizQzmyYVmCql7pdhldPuYQi4atACekbJaQplk6dWyIi10jCaFnd6pqvcEFXjbaJw==}
@@ -4915,7 +4930,6 @@ packages:
     resolution: {integrity: sha512-HrsFvqZZheusncQRiEE7GatOAETrARKV/lnfYicIm8lbvp/JQOdADOfhjBd2DajvoszEyxSM6RlAAIZgEoeu/A==}
     dependencies:
       ms: 2.1.3
-    dev: true
 
   /reflect.getprototypeof@1.0.4:
     resolution: {integrity: sha512-ECkTw8TmJwW60lOTR+ZkODISW6RQ8+2CL3COqtiJKLd6MmB45hN51HprHFziKLGkAuTGQhBb91V8cy+KHlaCjw==}
@@ -5630,7 +5644,6 @@ packages:
     dependencies:
       uint8arraylist: 2.4.7
       uint8arrays: 4.0.9
-    dev: true
 
   /uint8arraylist@2.4.7:
     resolution: {integrity: sha512-ohRElqR6C5dd60vRFLq40MCiSnUe1AzkpHvbCEMCGGP6zMoFYECsjdhL6bR1kTK37ONNRDuHQ3RIpScRYcYYIg==}
@@ -5722,6 +5735,14 @@ packages:
     dependencies:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
+    dev: true
+
+  /vite-plugin-wasm@3.3.0(vite@5.0.7):
+    resolution: {integrity: sha512-tVhz6w+W9MVsOCHzxo6SSMSswCeIw4HTrXEi6qL3IRzATl83jl09JVO1djBqPSwfjgnpVHNLYcaMbaDX5WB/pg==}
+    peerDependencies:
+      vite: ^2 || ^3 || ^4 || ^5
+    dependencies:
+      vite: 5.0.7(@types/node@20.10.4)
     dev: true
 
   /vite@5.0.7(@types/node@20.10.4):

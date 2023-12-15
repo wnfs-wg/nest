@@ -1,6 +1,8 @@
 import assert from 'assert'
 import all from 'it-all'
 
+import type { Blockstore } from 'interface-blockstore'
+
 import * as fc from 'fast-check'
 import * as UnixExporter from 'ipfs-unixfs-exporter'
 import * as Uint8Arrays from 'uint8arrays'
@@ -8,7 +10,6 @@ import * as Uint8Arrays from 'uint8arrays'
 import type { FileSystem } from '../../src/class.js'
 import { linksFromCID } from '../../src/root-tree/basic.js'
 import * as Path from '../../src/path.js'
-import type { Blockstore } from 'interface-blockstore'
 
 // PATHS
 
@@ -19,7 +20,7 @@ export function arbitraryDirectoryPath<P extends Path.Partition>(
     .array(arbitraryPathSegment(), { minLength: 1, maxLength: 8 })
     .map((array) => {
       const path: Path.Directory<Path.PartitionedNonEmpty<P>> = {
-        directory: [partition, ...array],
+        directory: [partition, ...array] as any,
       }
       return path
     })
@@ -32,7 +33,7 @@ export function arbitraryFilePath<P extends Path.Partition>(
     .array(arbitraryPathSegment(), { minLength: 1, maxLength: 8 })
     .map((array) => {
       const path: Path.File<Path.PartitionedNonEmpty<P>> = {
-        file: [partition, ...array],
+        file: [partition, ...array] as any,
       }
       return path
     })
@@ -110,7 +111,7 @@ export async function assertUnixNodeRemoval(
       `${unixRoot.toString()}${pathString}`,
       opts.blockstore
     )
-  } catch (error) {
+  } catch (error: any) {
     assert(error.toString(), 'File does not exist')
   }
 }

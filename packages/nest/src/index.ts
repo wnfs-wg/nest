@@ -1,3 +1,5 @@
+export { CID } from 'multiformats/cid'
+
 export * from './app-info.js'
 export * from './class.js'
 export * from './root-tree.js'

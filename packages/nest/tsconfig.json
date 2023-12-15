@@ -3,22 +3,13 @@
   "compilerOptions": {
     "outDir": "dist",
     "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext",
+    "noUnusedLocals": false
   },
-  "include": [
-    "src",
-    "test"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "out"
-  ],
+  "include": ["src", "test"],
+  "exclude": ["node_modules", "dist", "out"],
   "typedocOptions": {
-    "entryPoints": [
-      "src/index.js",
-      "src/module1.js"
-    ],
+    "entryPoints": ["src/index.js", "src/module1.js"],
     "includeVersion": true,
     "excludeExternals": true,
     "internalModule": "<internal>"
