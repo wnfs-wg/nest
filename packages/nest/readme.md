@@ -110,6 +110,8 @@ const fs = FileSystem.create({
 })
 ```
 
+When you make a modification through the `transaction` method and the commit ends up not being approved, this will result in a `"no-op"` string. In the case of using a regular mutation method such as `write` it will produce an error.
+
 ## Docs
 
 Check <https://fission-codes.github.io/stack>

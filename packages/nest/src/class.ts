@@ -699,11 +699,13 @@ export class FileSystem {
   ): Promise<MutationResult<Partition>> {
     const transactionResult = await this.transaction(handler, mutationOptions)
 
-    const dataRoot =
-      transactionResult === 'no-op'
-        ? await this.calculateDataRoot()
-        : transactionResult.dataRoot
+    if (transactionResult === 'no-op') {
+      throw new Error(
+        'The transaction was a no-op, most likely as a result of the commit not being approved by the `onCommit` verifier.'
+      )
+    }
 
+    const dataRoot = transactionResult.dataRoot
     const partition = determinePartition(path)
 
     switch (partition.name) {
