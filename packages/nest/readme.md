@@ -1,23 +1,29 @@
-# Package 1
+# Nest 🪺
 
 [![npm (scoped)](https://img.shields.io/npm/v/%40fission-codes/eslint-config)](https://www.npmjs.com/package/@fission-codes/eslint-config)
 [![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/fission-codes/stack/eslint-config.yml)](https://github.com/fission-codes/stack/actions/workflows/eslint-config.yml)
-[![Built by FISSION](https://img.shields.io/badge/built_by-⌘_Fission-purple.svg)](https://fission.codes)
-[![Discord](https://img.shields.io/discord/478735028319158273?&color=mediumslateblue)](https://discord.gg/zAQBDEq)
-[![Discourse users](<https://img.shields.io/discourse/users?server=https%3A%2F%2Ftalk.fission.codes&label=talk&color=rgb(14%2C%20118%2C%20178)>)](https://talk.fission.codes)
 
-Fission eslint, ts and prettier config.
+## Features
+
+- A file system class that allows for an easy-to-use mutable API.
+- A root tree, holding references to all the needed individual parts (public fs, private forest, exchange, etc)
+- A unix-fs compatibility layer for the public file system (allows for public files to be viewed through, for example, IPFS gateways)
+- A mounting system for private nodes, mount specific paths.
+- Provides a transaction system, rewinding the state if an error occurs.
+- Creates a private forest automatically with a RSA modules using the Web Crypto API (supported on multiple platforms)
+- Ability to verify commits to the file system. If a commit, aka. modification, is not verified, it will result in a no-op.
+- And more: typed paths, events, path helpers, data casting, …
 
 ## Installation
 
 ```bash
-pnpm install package1
+pnpm install @wnfs-wg/nest
 ```
 
 ## Usage
 
 ```js
-import { module } from 'package1'
+import { module } from '@wnfs-wg/nest'
 ```
 
 ## Docs
@@ -28,7 +34,7 @@ Check <https://fission-codes.github.io/stack>
 
 Read contributing guidelines [here](../../.github/CONTRIBUTING.md).
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/hugomrdias/hd-template)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/@wnfs-wg/nest)
 
 ## License
 

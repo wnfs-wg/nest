@@ -1,30 +1,25 @@
-__⚠️ Work in progress!__
+# Nest 🪺
 
-A layer around the `wnfs` package that provides a `FileSystem` class, transactions, a root tree and some other essentials.
+A layer around the `wnfs` package that provides a `FileSystem` class, a root tree, mounts, transactions and some other essentials.
 
-## Features
-
-- A file system class that allows for an easy-to-use mutable API.
-- A transaction system, rewinding the state if an error occurs.
-- Creates a private forest automatically with a RSA modules using the Web Crypto API (supported on multiple platforms)
+_More info in the [package readme](https://github.com/wnfs-wg/nest/tree/main/packages/nest/readme.md)._
 
 ## Packages
 
-- [package1](https://github.com/fission-codes/js-template/tree/master/packages/package1) - description
-- [package2](https://github.com/fission-codes/js-template/tree/master/packages/package2) - description
+- [nest](https://github.com/wnfs-wg/nest/tree/main/packages/nest) - The primary `nest` package.
 
 ## Examples
 
-- [`demo`](https://github.com/fission-codes/js-template/tree/master/examples/demo) - description
+- [`demo`](https://github.com/wnfs-wg/nest/tree/main/examples/demo) - A simple demo of how the `nest` package is used.
 
 ### Checkout examples
 
-You can use Codesandbox <https://githubbox.com/fission-codes/js-template/tree/master/examples/demo> and start hacking right away.
+You can use Codesandbox <https://githubbox.com/wnfs-wg/nest/tree/main/examples/demo> and start hacking right away.
 
 To clone it locally:
 
 ```bash
-npx tiged fission-codes/js-template/examples/demo demo
+npx tiged wnfs-wg/nest/examples/demo demo
 cd demo
 pnpm install
 pnpm dev
@@ -36,7 +31,7 @@ You can try any of the examples by replacing `demo` with the name of the example
 
 Read contributing guidelines [here](.github/CONTRIBUTING.md).
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/hd-template/examples)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/wnfs-wg/nest)
 
 ## License
 

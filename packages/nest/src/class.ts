@@ -232,6 +232,9 @@ export class FileSystem {
   /**
    * Mount private nodes onto the file system.
    *
+   * When a `capsuleKey` is not given,
+   * it will create the given path instead of trying to load it.
+   *
    * @group Mounting
    */
   async mountPrivateNodes(
