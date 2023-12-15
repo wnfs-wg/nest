@@ -119,6 +119,7 @@ export class FileSystem {
   static async fromCID(cid: CID, opts: Options): Promise<FileSystem> {
     const { blockstore, onCommit, rootTreeClass, settleTimeBeforePublish } =
       opts
+
     const rootTree = await (rootTreeClass ?? BasicRootTree).fromCID(
       blockstore,
       cid
@@ -647,12 +648,10 @@ export class FileSystem {
     const dataRoot = await this.calculateDataRoot()
 
     // Emit events
-    for (const change of changes) {
-      await this.#eventEmitter.emit('local-change', {
-        dataRoot,
-        ...change,
-      })
-    }
+    await this.#eventEmitter.emit('commit', {
+      dataRoot,
+      modifications: [...changes],
+    })
 
     // Publish
     if (

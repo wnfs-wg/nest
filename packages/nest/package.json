@@ -2,7 +2,7 @@
   "name": "@wnfs-wg/nest",
   "type": "module",
   "version": "0.1.0",
-  "description": "Example package description.",
+  "description": "A utility layer around the `wnfs` package.",
   "author": "Steven Vandevelde <icid.asset@gmail.com> (tokono.ma)",
   "license": "(Apache-2.0 AND MIT)",
   "homepage": "https://github.com/wnfs-wg/nest/tree/main/packages/nest",

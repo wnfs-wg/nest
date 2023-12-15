@@ -1,13 +1,11 @@
 import type { CID } from 'multiformats/cid'
-import type { DistinctivePath, Partition, Partitioned } from './path.js'
-import type { MutationType } from './types.js'
+import type { Modification } from './types.js'
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export type Events = {
-  'local-change': {
+  commit: {
     dataRoot: CID
-    path: DistinctivePath<Partitioned<Partition>>
-    type: MutationType
+    modifications: Modification[]
   }
   publish: { dataRoot: CID }
 }

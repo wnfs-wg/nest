@@ -53,11 +53,7 @@ describe('File System Class', () => {
     const privatePath = Path.file('private', 'nested-private', 'private.txt')
 
     const { contentCID } = await fs.write(publicPath, 'utf8', 'public')
-    const { _capsuleKey, dataRoot } = await fs.write(
-      privatePath,
-      'utf8',
-      'private'
-    )
+    const { dataRoot } = await fs.write(privatePath, 'utf8', 'private')
 
     const contentBytes = await Unix.exportFile(contentCID, blockstore)
 
@@ -140,7 +136,7 @@ describe('File System Class', () => {
     const path = Path.file('public', 'a')
     const bytes = new TextEncoder().encode('🚀')
 
-    const { _contentCID } = await fs.write(path, 'bytes', bytes)
+    await fs.write(path, 'bytes', bytes)
 
     assert.equal(await fs.read(path, 'utf8'), '🚀')
     await assertUnixFsFile({ blockstore }, fs, path, bytes)
@@ -149,7 +145,7 @@ describe('File System Class', () => {
   it('writes and reads private files', async () => {
     const path = Path.file('private', 'a')
 
-    const { _capsuleKey } = await fs.write(path, 'json', { foo: 'bar', a: 1 })
+    await fs.write(path, 'json', { foo: 'bar', a: 1 })
 
     assert.deepEqual(await fs.read(path, 'json'), { foo: 'bar', a: 1 })
   })
@@ -854,8 +850,8 @@ describe('File System Class', () => {
     const fromPath = Path.file('public', 'a', 'b', 'file')
     const toPath = Path.file('private', 'a', 'b', 'c', 'd', 'file')
 
-    const { _capsuleCID } = await fs.write(fromPath, 'utf8', '💃')
-    const { _capsuleKey } = await fs.move(fromPath, toPath)
+    await fs.write(fromPath, 'utf8', '💃')
+    await fs.move(fromPath, toPath)
 
     assert.equal(await fs.read(toPath, 'utf8'), '💃')
     assert.equal(await fs.exists(fromPath), false)
@@ -865,8 +861,8 @@ describe('File System Class', () => {
     const fromPath = Path.file('private', 'a', 'b', 'file')
     const toPath = Path.file('public', 'a', 'b', 'c', 'd', 'file')
 
-    const { _capsuleKey } = await fs.write(fromPath, 'utf8', '💃')
-    const { _capsuleCID } = await fs.move(fromPath, toPath)
+    await fs.write(fromPath, 'utf8', '💃')
+    await fs.move(fromPath, toPath)
 
     assert.equal(await fs.read(toPath, 'utf8'), '💃')
     assert.equal(await fs.exists(fromPath), false)
@@ -919,35 +915,27 @@ describe('File System Class', () => {
       setTimeout(resolve, fsOpts.settleTimeBeforePublish * 1.5)
     )
 
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<CID>((resolve, reject) => {
       setTimeout(reject, 10_000)
       fs.once('publish')
         .then((event) => event.dataRoot)
         .then(resolve, reject)
     })
 
-    const a = await fs.write(
-      Path.file('private', 'a'),
-      'bytes',
-      new Uint8Array()
-    )
-    const b = await fs.write(
-      Path.file('private', 'b'),
-      'bytes',
-      new Uint8Array()
-    )
-    const c = await fs.write(
-      Path.file('private', 'c'),
-      'bytes',
-      new Uint8Array()
-    )
+    await fs.write(Path.file('private', 'a'), 'bytes', new Uint8Array())
+
+    await fs.write(Path.file('private', 'b'), 'bytes', new Uint8Array())
+
+    await fs.write(Path.file('private', 'c'), 'bytes', new Uint8Array())
+
     const d = await fs.write(
       Path.file('private', 'd'),
       'bytes',
       new Uint8Array()
     )
 
-    assert.equal((await promise).toString(), d.dataRoot.toString())
+    const result = await promise
+    assert.equal(result.toString(), d.dataRoot.toString())
   })
 
   it("doesn't publish when asked not to do so", async () => {
@@ -986,10 +974,10 @@ describe('File System Class', () => {
   // Other than "publish"
 
   it('emits an event for a mutation', async () => {
-    const eventPromise: Promise<CID> = new Promise((resolve, reject) => {
-      setTimeout(reject, 10000)
+    const eventPromise = new Promise<CID>((resolve, reject) => {
+      setTimeout(reject, 10_000)
 
-      fs.on('local-change', ({ dataRoot }) => {
+      fs.on('commit', ({ dataRoot }) => {
         resolve(dataRoot)
       })
     })
@@ -1000,10 +988,8 @@ describe('File System Class', () => {
       new Uint8Array()
     )
 
-    assert.equal(
-      (await eventPromise).toString(),
-      mutationResult.dataRoot.toString()
-    )
+    const eventResult = await eventPromise
+    assert.equal(eventResult.toString(), mutationResult.dataRoot.toString())
   })
 
   // TRANSACTIONS
@@ -1022,14 +1008,14 @@ describe('File System Class', () => {
     assert.equal(await fs.read(Path.file('public', 'file'), 'utf8'), '💃')
   })
 
-  async function transaction(): Promise<void> {
-    await fs
-      .transaction(async (t) => {
-        await t.write(Path.file('private', 'file'), 'utf8', '💃')
-        throw new Error('Whoops')
-      })
-      .catch((_error) => {})
-  }
+  // async function transaction(): Promise<void> {
+  //   await fs
+  //     .transaction(async (t) => {
+  //       await t.write(Path.file('private', 'file'), 'utf8', '💃')
+  //       throw new Error('Whoops')
+  //     })
+  //     .catch((_error) => {})
+  // }
 
   // it("doesn't commit a transaction when an error occurs inside of the transaction", async () => {
   //   const tracker = new assert.CallTracker()

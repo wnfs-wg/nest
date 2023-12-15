@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "",
-  "author": "Hugo Dias <hugomrdias@gmail.com> (hugodias.me)",
+  "author": "Steven Vandevelde <icid.asset@gmail.com> (tokono.ma)",
   "license": "MIT",
   "keywords": [],
   "main": "src/main.jsx",
@@ -15,7 +15,7 @@
     "serve": "vite preview --port 3000"
   },
   "dependencies": {
-    "package1": "*"
+    "@wnfs-wg/nest": "file:../../packages/nest"
   },
   "devDependencies": {
     "@babel/core": "^7.23.5",
@@ -24,11 +24,7 @@
     "vite": "^5.0.7"
   },
   "eslintConfig": {
-    "extends": [
-      "@fission-codes"
-    ],
-    "ignorePatterns": [
-      "dist"
-    ]
+    "extends": ["@fission-codes"],
+    "ignorePatterns": ["dist"]
   }
 }
