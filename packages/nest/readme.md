@@ -35,7 +35,9 @@ Scenario 1:<br />
 🚀 Create a new file system, create a new file and read it back.
 
 ```ts
-const fs = await FileSystem.create({ blockstore: new MemoryBlockstore() })
+const fs = await FileSystem.create({
+  blockstore: new MemoryBlockstore()
+})
 
 await fs.write(
   Path.file('private', 'file'),
@@ -43,7 +45,10 @@ await fs.write(
   '🪺'
 )
 
-const contents = await fs.read(Path.file('private', 'file'), 'utf8')
+const contents = await fs.read(
+  Path.file('private', 'file'),
+  'utf8'
+)
 ```
 
 Scenario 2:<br />
