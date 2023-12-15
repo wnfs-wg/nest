@@ -11,12 +11,12 @@ export abstract class RootTree {
   abstract privateForest(): PrivateForest
   abstract replacePrivateForest(
     forest: PrivateForest,
-    changes: Modification[]
+    modifications: Modification[]
   ): Promise<RootTree>
   abstract publicRoot(): PublicDirectory
   abstract replacePublicRoot(
     dir: PublicDirectory,
-    changes: Modification[]
+    modifications: Modification[]
   ): Promise<RootTree>
 
   abstract clone(): RootTree

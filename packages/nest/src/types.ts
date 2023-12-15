@@ -7,7 +7,7 @@ export type AnySupportedDataType<V> =
   | string
 
 export type CommitVerifier = (
-  changes: Modification[]
+  modifications: Modification[]
 ) => Promise<{ commit: boolean }>
 
 export type DataType = 'bytes' | 'json' | 'utf8'

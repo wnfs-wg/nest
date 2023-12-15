@@ -52,7 +52,7 @@ export class TransactionContext {
   #privateNodes: MountedPrivateNodes
   #rootTree: RootTree
 
-  readonly #changes: Set<{
+  readonly #modifications: Set<{
     type: MutationType
     path: Path.Distinctive<Partitioned<Partition>>
   }>
@@ -71,13 +71,13 @@ export class TransactionContext {
     this.#rng = rng
     this.#rootTree = rootTree
 
-    this.#changes = new Set()
+    this.#modifications = new Set()
   }
 
   /** @internal */
   static async commit(context: TransactionContext): Promise<
     | {
-        changes: Array<{
+        modifications: Array<{
           path: Path.Distinctive<Partitioned<Partition>>
           type: MutationType
         }>
@@ -86,23 +86,23 @@ export class TransactionContext {
       }
     | NOOP
   > {
-    const changes = [...context.#changes]
+    const modifications = [...context.#modifications]
 
     // Verify
-    const { commit } = await context.#onCommit([...changes])
+    const { commit } = await context.#onCommit([...modifications])
     if (!commit) return 'no-op'
 
     // Private forest
-    const newForest = await changes.reduce(
-      async (oldForestPromise, change): Promise<PrivateForest> => {
+    const newForest = await modifications.reduce(
+      async (oldForestPromise, mod): Promise<PrivateForest> => {
         const oldForest = await oldForestPromise
 
-        if (!Path.isPartition('private', change.path)) {
+        if (!Path.isPartition('private', mod.path)) {
           return oldForest
         }
 
         const maybeNode = findPrivateNode(
-          change.path as Path.Distinctive<Path.Partitioned<Path.Private>>,
+          mod.path as Path.Distinctive<Path.Partitioned<Path.Private>>,
           context.#privateNodes
         )
 
@@ -119,12 +119,12 @@ export class TransactionContext {
     // Replace forest
     const rootTree = await context.#rootTree.replacePrivateForest(
       newForest,
-      changes
+      modifications
     )
 
     // Fin
     return {
-      changes: changes,
+      modifications: modifications,
       privateNodes: context.#privateNodes,
       rootTree: rootTree,
     }
@@ -568,7 +568,7 @@ export class TransactionContext {
     mut: Mutations.Public,
     mutType: MutationType
   ): Promise<void> {
-    const change = {
+    const mod = {
       type: mutType,
       path: path,
     }
@@ -581,11 +581,11 @@ export class TransactionContext {
 
     // Replace public root
     this.#rootTree = await this.#rootTree.replacePublicRoot(result.rootDir, [
-      change,
+      mod,
     ])
 
     // Mark node as changed
-    this.#changes.add(change)
+    this.#modifications.add(mod)
   }
 
   async #privateMutation(
@@ -609,7 +609,7 @@ export class TransactionContext {
     })
 
     // Mark node as changed
-    this.#changes.add(change)
+    this.#modifications.add(change)
 
     // Replace forest
     this.#rootTree = await this.#rootTree.replacePrivateForest(result.forest, [

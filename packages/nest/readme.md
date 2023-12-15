@@ -92,6 +92,24 @@ Scenario 3:<br />
 const fs = await FileSystem.fromCID(fsPointer, { blockstore })
 ```
 
+## Commit verification
+
+This exists so you can approve modifications to the file system.
+
+```ts
+import { Modification } from '@wnfs-wg/nest'
+
+const fs = FileSystem.create({
+  blockstore,
+  onCommit: (modifications: Modification[]): { commit: boolean } => {
+    // For example, check if I have access to all paths.
+    const satisfied = modifications.every(m => ALLOWED_PATHS.includes( Path.toPosix(m.path) ))
+    if (satisfied) return { commit: true }
+    else return { commit: false }
+  }
+})
+```
+
 ## Docs
 
 Check <https://fission-codes.github.io/stack>

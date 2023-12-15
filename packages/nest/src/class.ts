@@ -625,7 +625,7 @@ export class FileSystem {
     mutationOptions: MutationOptions = {}
   ): Promise<
     | {
-        changes: Modification[]
+        modifications: Modification[]
         dataRoot: CID
       }
     | NOOP
@@ -639,7 +639,7 @@ export class FileSystem {
     const commitResult = await TransactionContext.commit(context)
     if (commitResult === 'no-op') return 'no-op'
 
-    const { changes, privateNodes, rootTree } = commitResult
+    const { modifications, privateNodes, rootTree } = commitResult
 
     this.#privateNodes = privateNodes
     this.#rootTree = rootTree
@@ -650,7 +650,7 @@ export class FileSystem {
     // Emit events
     await this.#eventEmitter.emit('commit', {
       dataRoot,
-      modifications: [...changes],
+      modifications: [...modifications],
     })
 
     // Publish
@@ -663,7 +663,7 @@ export class FileSystem {
 
     // Fin
     return {
-      changes,
+      modifications,
       dataRoot,
     }
   }

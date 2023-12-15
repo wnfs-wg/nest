@@ -150,7 +150,7 @@ export class BasicRootTree implements RootTree {
 
   async replacePrivateForest(
     forest: PrivateForest,
-    _changes: Modification[]
+    _modifications: Modification[]
   ): Promise<RootTree> {
     return new BasicRootTree({
       blockstore: this.#blockstore,
@@ -169,7 +169,7 @@ export class BasicRootTree implements RootTree {
 
   async replacePublicRoot(
     dir: PublicDirectory,
-    changes: Modification[]
+    modifications: Modification[]
   ): Promise<RootTree> {
     const treeWithNewPublicRoot = new BasicRootTree({
       blockstore: this.#blockstore,
@@ -181,26 +181,26 @@ export class BasicRootTree implements RootTree {
       version: this.#version,
     })
 
-    const unixTree = await changes.reduce(async (oldRootPromise, change) => {
+    const unixTree = await modifications.reduce(async (oldRootPromise, mod) => {
       const oldRoot = await oldRootPromise
 
-      if (!Path.isPartition('public', change.path)) {
+      if (!Path.isPartition('public', mod.path)) {
         return oldRoot
       }
 
-      const path = Path.removePartition(change.path)
+      const path = Path.removePartition(mod.path)
 
-      if (change.type === 'removed') {
+      if (mod.type === 'removed') {
         return await Unix.removeNodeFromTree(oldRoot, path, this.#blockstore)
       }
 
       const contentCID =
-        Path.isFile(change.path) &&
-        Path.isPartitionedNonEmpty<Path.Public>(change.path)
+        Path.isFile(mod.path) &&
+        Path.isPartitionedNonEmpty<Path.Public>(mod.path)
           ? await References.contentCID(
               this.#blockstore,
               treeWithNewPublicRoot,
-              change.path
+              mod.path
             )
           : undefined
 

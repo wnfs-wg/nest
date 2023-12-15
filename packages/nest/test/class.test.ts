@@ -1035,7 +1035,7 @@ describe('File System Class', () => {
     fs = await FileSystem.create({
       blockstore,
       ...fsOpts,
-      onCommit: async (_changes: Modification[]) => ({ commit: false }),
+      onCommit: async (_modifications: Modification[]) => ({ commit: false }),
     })
 
     mounts = await fs.mountPrivateNodes([{ path: Path.root() }])
