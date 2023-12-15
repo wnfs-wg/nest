@@ -28,17 +28,26 @@ pnpm install @wnfs-wg/nest
 import { FileSystem, Path } from '@wnfs-wg/nest'
 
 // Provide some block store of the `Blockstore` type from the `interface-blockstore` package
-import { MemoryBlockstore } from 'blockstore-core/memory'
+import { IDBBlockstore } from 'blockstore-idb'
 ```
 
 Scenario 1:<br />
 🚀 Create a new file system, create a new file and read it back.
 
 ```ts
+const blockstore = new IDBBlockstore('path/to/store')
+await blockstore.open()
+
 const fs = await FileSystem.create({
-  blockstore: new MemoryBlockstore()
+  blockstore
 })
 
+// Create the private node of which we'll keep the encryption key around.
+const { capsuleKey } = await fs.mountPrivateNode({
+  path: Path.root() // ie. root private directory
+})
+
+// Write & Read
 await fs.write(
   Path.file('private', 'file'),
   'utf8',
@@ -88,8 +97,52 @@ Scenario 3:<br />
 🧳 Load a file system from a previous pointer.
 
 ```ts
-// `blockstore` from scenario 1 & `fsPointer` from scenario 2
+// `blockstore` from scenario 1
+// `fsPointer` from scenario 2
 const fs = await FileSystem.fromCID(fsPointer, { blockstore })
+
+// `capsuleKey` from scenario 1
+await fs.mountPrivateNode({
+  path: Path.root(),
+  capsuleKey
+})
+```
+
+## Actions
+
+### Queries
+
+```ts
+fs.exists
+fs.listDirectory // alias: fs.ls
+fs.read
+```
+
+### Mutations
+
+```ts
+fs.copy // alias: fs.cp
+fs.move // alias: fs.mv
+fs.createDirectory
+fs.createFile
+fs.ensureDirectory // alias: fs.mkdir
+fs.remove // alias: fs.rm
+fs.rename
+fs.write
+```
+
+## Transactions
+
+```ts
+const result: Promise<
+  | { modifications: Modification[]; dataRoot: CID }
+  | 'no-op'
+> = fs.transaction(t => {
+  t.write(…)
+  t.read(…)
+  t.write(…)
+  // You can use all the same methods as with the `fs` interface
+})
 ```
 
 ## Commit verification
@@ -114,6 +167,79 @@ When you make a modification through the `transaction` method and the commit end
 
 ## Docs
 
+```ts
+FileSystem.create
+FileSystem.fromCID
+
+fs.mountPrivateNode
+fs.mountPrivateNodes
+fs.unmountPrivateNode
+
+fs.exists
+fs.listDirectory
+fs.ls
+fs.read
+
+fs.copy
+fs.cp
+fs.move
+fs.mv
+fs.createDirectory
+fs.createFile
+fs.ensureDirectory
+fs.mkdir
+fs.remove
+fs.rm
+fs.rename
+fs.write
+
+fs.transaction
+fs.calculateDataRoot
+
+fs.contentCID
+fs.capsuleCID
+fs.capsuleKey
+
+fs.on
+fs.onAny
+fs.off
+fs.offAny
+fs.once
+fs.anyEvent
+fs.events
+
+Path.directory
+Path.file
+Path.fromKind
+Path.root
+Path.appData
+
+Path.fromPosix
+Path.toPosix
+
+Path.combine
+Path.isDirectory
+Path.isFile
+Path.isOnRootBranch
+Path.isPartition
+Path.isPartitioned
+Path.isPartitionedNonEmpty
+Path.isRootDirectory
+Path.isSamePartition
+Path.isSameKind
+Path.kind
+Path.length
+Path.map
+Path.parent
+Path.removePartition
+Path.replaceTerminus
+Path.rootBranch
+Path.terminus
+Path.unwrap
+Path.withPartition
+```
+
+TODO:
 Check <https://fission-codes.github.io/stack>
 
 ## Contributing

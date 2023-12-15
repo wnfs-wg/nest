@@ -40,6 +40,10 @@
       "types": "./dist/src/path.d.ts",
       "default": "./src/path.js"
     },
+    "./transaction": {
+      "transaction": "./dist/src/transaction.d.ts",
+      "default": "./src/transaction.js"
+    },
     "./types": {
       "types": "./dist/src/types.d.ts",
       "default": "./src/types.js"
@@ -64,6 +68,7 @@
       "errors": ["dist/src/errors"],
       "events": ["dist/src/events"],
       "path": ["dist/src/path"],
+      "transaction": ["dist/src/transaction"],
       "types": ["dist/src/types"],
       "version": ["dist/src/version"]
     }

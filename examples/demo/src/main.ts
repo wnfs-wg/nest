@@ -3,13 +3,13 @@ import { IDBBlockstore } from 'blockstore-idb'
 import * as uint8arrays from 'uint8arrays'
 
 declare global {
-  var fs: FileSystem
-  var Path: typeof Path
+  var _fs: FileSystem
+  var _Path: typeof Path
 }
 
 // HTML
 const h1 = document.querySelector('h1')
-if (!h1) throw new Error('Expected to find a h1 element')
+if (h1 === null) throw new Error('Expected to find a h1 element')
 
 // Blockstore
 const blockstore = new IDBBlockstore('path/to/store')
@@ -24,12 +24,12 @@ const fs =
     ? await FileSystem.create({ blockstore })
     : await FileSystem.fromCID(CID.parse(dataRoot), { blockstore })
 
-globalThis.fs = fs
-globalThis.Path = Path
+globalThis._fs = fs
+globalThis._Path = Path
 
 // Create new private directory at the root
 const { capsuleKey } = await fs.mountPrivateNode({
-  path: Path.directory(),
+  path: Path.root(),
   capsuleKey:
     storedKey === null
       ? undefined
