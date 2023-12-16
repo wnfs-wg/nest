@@ -51,6 +51,5 @@ if (await fs.exists(filePath)) {
     uint8arrays.toString(capsuleKey, 'base64')
   )
 
-  // eslint-disable-next-line no-console
   h1.textContent = 'Time first seen: ' + dateTime
 }
