@@ -39,7 +39,7 @@ importers:
   examples/demo:
     dependencies:
       '@wnfs-wg/nest':
-        specifier: workspace:../../packages/nest
+        specifier: '*'
         version: link:../../packages/nest
       blockstore-idb:
         specifier: ^1.1.6

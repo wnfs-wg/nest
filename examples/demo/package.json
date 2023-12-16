@@ -15,7 +15,7 @@
     "serve": "vite preview --port 3000"
   },
   "dependencies": {
-    "@wnfs-wg/nest": "workspace:../../packages/nest",
+    "@wnfs-wg/nest": "*",
     "blockstore-idb": "^1.1.6",
     "uint8arrays": "^5.0.0"
   },
@@ -27,11 +27,7 @@
     "vite-plugin-wasm": "^3.3.0"
   },
   "eslintConfig": {
-    "extends": [
-      "@fission-codes"
-    ],
-    "ignorePatterns": [
-      "dist"
-    ]
+    "extends": ["@fission-codes"],
+    "ignorePatterns": ["dist"]
   }
 }
