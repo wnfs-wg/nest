@@ -20,7 +20,7 @@
     "uint8arrays": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.5",
+    "@babel/core": "^7.23.6",
     "@types/node": "^20.10.4",
     "typescript": "5.2.2",
     "vite": "^5.0.7",
