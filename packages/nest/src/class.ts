@@ -53,13 +53,15 @@ import { BasicRootTree } from './root-tree/basic.js'
 
 // OPTIONS
 
-export interface Options {
+/** @group 🪺 :: START HERE */
+export interface FileSystemOptions {
   blockstore: Blockstore
   onCommit?: CommitVerifier
   rootTreeClass?: typeof RootTree
   settleTimeBeforePublish?: number
 }
 
+/** @group 🪺 :: START HERE */
 export class FileSystem {
   readonly #blockstore: Blockstore
   readonly #debouncedDataRootUpdate: debounce.DebouncedFunction<any>
@@ -99,8 +101,10 @@ export class FileSystem {
 
   /**
    * Creates a file system with an empty public tree & an empty private tree at the root.
+   *
+   * @group 🪺 :: START HERE
    */
-  static async create(opts: Options): Promise<FileSystem> {
+  static async create(opts: FileSystemOptions): Promise<FileSystem> {
     const { blockstore, onCommit, rootTreeClass, settleTimeBeforePublish } =
       opts
     const rootTree = await (rootTreeClass ?? BasicRootTree).create(blockstore)
@@ -115,8 +119,10 @@ export class FileSystem {
 
   /**
    * Loads an existing file system from a CID.
+   *
+   * @group 🪺 :: START HERE
    */
-  static async fromCID(cid: CID, opts: Options): Promise<FileSystem> {
+  static async fromCID(cid: CID, opts: FileSystemOptions): Promise<FileSystem> {
     const { blockstore, onCommit, rootTreeClass, settleTimeBeforePublish } =
       opts
 
@@ -137,7 +143,7 @@ export class FileSystem {
   // ------
 
   /**
-   * {@inheritDoc events.EmitterClass.on}
+   * {@inheritDoc Emittery.on}
    *
    * @group Events
    */
@@ -147,7 +153,7 @@ export class FileSystem {
   ): UnsubscribeFunction => this.#eventEmitter.on(eventName, listener)
 
   /**
-   * {@inheritDoc events.EmitterClass.onAny}
+   * {@inheritDoc Emittery.onAny}
    *
    * @group Events
    */
@@ -159,7 +165,7 @@ export class FileSystem {
   ): UnsubscribeFunction => this.#eventEmitter.onAny(listener)
 
   /**
-   * {@inheritDoc events.EmitterClass.off}
+   * {@inheritDoc Emittery.off}
    *
    * @group Events
    */
@@ -171,7 +177,7 @@ export class FileSystem {
   }
 
   /**
-   * {@inheritDoc events.EmitterClass.offAny}
+   * {@inheritDoc Emittery.offAny}
    *
    * @group Events
    */
@@ -185,7 +191,7 @@ export class FileSystem {
   }
 
   /**
-   * {@inheritDoc events.EmitterClass.once}
+   * {@inheritDoc Emittery.once}
    *
    * @group Events
    */
@@ -195,7 +201,7 @@ export class FileSystem {
     this.#eventEmitter.once(eventName)
 
   /**
-   * {@inheritDoc events.EmitterClass.anyEvent}
+   * {@inheritDoc Emittery.anyEvent}
    *
    * @group Events
    */
@@ -203,7 +209,7 @@ export class FileSystem {
     this.#eventEmitter.anyEvent()
 
   /**
-   * {@inheritDoc events.EmitterClass.events}
+   * {@inheritDoc Emittery.events}
    *
    * @group Events
    */

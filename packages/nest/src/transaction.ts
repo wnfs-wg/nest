@@ -43,7 +43,6 @@ import type {
 
 // CLASS
 
-/** @group File System */
 export class TransactionContext {
   readonly #blockstore: Blockstore
   readonly #onCommit: CommitVerifier
@@ -389,8 +388,10 @@ export class TransactionContext {
     }
   }
 
+  /** @group Mutating */
   mkdir = this.ensureDirectory
 
+  /** @group Mutating */
   async move(
     fromParam: Path.Distinctive<PartitionedNonEmpty<Partition>>,
     toParam:

@@ -2,12 +2,11 @@
   "extends": "@fission-codes/eslint-config/tsconfig.json",
   "typedocOptions": {
     "entryPointStrategy": "packages",
-    "entryPoints": ["packages/package1"],
-    "excludeExternals": true,
+    "entryPoints": ["packages/nest"],
     "darkHighlightTheme": "github-dark",
     "sourceLinkExternal": true,
     "navigationLinks": {
-      "Github": "https://github.com/fission-code/js-template"
+      "Github": "https://github.com/wnfs-wg/nest"
     }
   }
 }

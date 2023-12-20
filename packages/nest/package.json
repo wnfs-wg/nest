@@ -13,51 +13,51 @@
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
-      "default": "./src/index.js"
+      "default": "./dist/src/index.js"
     },
     "./app-info": {
       "types": "./dist/src/app-info.d.ts",
-      "default": "./src/app-info.js"
+      "default": "./dist/src/app-info.js"
     },
     "./class": {
       "types": "./dist/src/class.d.ts",
-      "default": "./src/class.js"
+      "default": "./dist/src/class.js"
     },
     "./crypto": {
       "types": "./dist/src/crypto.d.ts",
-      "browser": "./src/crypto-browser.js",
-      "default": "./src/crypto.js"
+      "browser": "./dist/src/crypto-browser.js",
+      "default": "./dist/src/crypto.js"
     },
     "./errors": {
       "types": "./dist/src/errors.d.ts",
-      "default": "./src/errors.js"
+      "default": "./dist/src/errors.js"
     },
     "./events": {
       "types": "./dist/src/events.d.ts",
-      "default": "./src/events.js"
+      "default": "./dist/src/events.js"
     },
     "./path": {
       "types": "./dist/src/path.d.ts",
-      "default": "./src/path.js"
+      "default": "./dist/src/path.js"
     },
     "./transaction": {
       "transaction": "./dist/src/transaction.d.ts",
-      "default": "./src/transaction.js"
+      "default": "./dist/src/transaction.js"
     },
     "./types": {
       "types": "./dist/src/types.d.ts",
-      "default": "./src/types.js"
+      "default": "./dist/src/types.js"
     },
     "./version": {
       "types": "./dist/src/version.d.ts",
-      "default": "./src/version.js"
+      "default": "./dist/src/version.js"
     }
   },
-  "main": "src/index.js",
+  "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "browser": {
     "crypto": false,
-    "./src/crypto.js": "./src/crypto-browser.js"
+    "./dist/src/crypto.js": "./dist/src/crypto-browser.js"
   },
   "typesVersions": {
     "*": {

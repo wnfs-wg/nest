@@ -1,4 +1,3 @@
 {
-  "packages/package1": "0.0.1",
-  "packages/package2": "0.0.2"
+  "packages/nest": "0.1.0"
 }

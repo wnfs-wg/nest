@@ -118,7 +118,7 @@ describe('Path functions', () => {
   it('can create app-data paths', () => {
     const appInfo = {
       name: 'Tests',
-      creator: 'Fission',
+      creator: 'WNFS WG',
     }
 
     const root: DirectoryPath<Path.PartitionedNonEmpty<Path.Private>> =

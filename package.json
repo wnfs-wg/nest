@@ -15,7 +15,7 @@
     "test": "pnpm -r --if-present run test",
     "check": "pnpm -r --if-present run check",
     "build": "pnpm -r --if-present run build",
-    "docs": "typedoc --out docs --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-zod"
+    "docs": "typedoc --out docs --plugin typedoc-plugin-missing-exports --plugin typedoc-plugin-zod --plugin typedoc-plugin-rename-defaults"
   },
   "devDependencies": {
     "@fission-codes/eslint-config": "^0.1.0",
@@ -25,6 +25,7 @@
     "simple-git-hooks": "^2.9.0",
     "typedoc": "^0.25.4",
     "typedoc-plugin-missing-exports": "^2.1.0",
+    "typedoc-plugin-rename-defaults": "^0.7.0",
     "typedoc-plugin-zod": "^1.1.0",
     "typescript": "5.3.3"
   },

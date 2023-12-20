@@ -9,9 +9,26 @@
   "include": ["src", "test"],
   "exclude": ["node_modules", "dist", "out"],
   "typedocOptions": {
-    "entryPoints": ["src/index.js", "src/module1.js"],
+    "entryPoints": ["src/index.ts"],
     "includeVersion": true,
-    "excludeExternals": true,
-    "internalModule": "<internal>"
+    "excludeExternals": false,
+    "internalModule": "<internal>",
+    "groupOrder": [
+      "🪺 :: START HERE",
+      "---",
+      "Mounting",
+      "Querying",
+      "Mutating",
+      "Transacting",
+      "Events",
+      "Misc",
+      "POSIX",
+      "---",
+      "Namespaces",
+      "Classes",
+      "Functions",
+      "Variables",
+      "*"
+    ]
   }
 }

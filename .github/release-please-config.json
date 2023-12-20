@@ -1,7 +1,6 @@
 {
   "separate-pull-requests": true,
   "packages": {
-    "packages/package1": {},
-    "packages/package2": {}
+    "packages/nest": {}
   }
 }

@@ -6,7 +6,7 @@ You can contribute to the project at any level. Whether you are new to web devel
 
 **No contribution is too small, and all contributions are valued.**
 
-This guide will help you to get started. It includes many details, but don't let that turn you away. Consider this a map to help you navigate the process, and please reach out to us with any questions and concerns in the our public [channel] .
+This guide will help you to get started. It includes many details, but don't let that turn you away. Consider this a map to help you navigate the process, and please reach out to us with any questions and concerns.
 
 ## Conduct
 
@@ -23,7 +23,7 @@ join in the discussion around bugs and comment on pull requests.
 
 ### Asking for help
 
-If you have reviewed our [documentation][docs] and still have questions or are having problems, ask for help in the our public [channel] or [start a discussion][discussions].
+If you have reviewed our [documentation][docs] and still have questions or are having problems, [start a discussion][discussions].
 
 ### Submitting a bug report
 
@@ -122,11 +122,10 @@ The most important prefixes you should have in mind are:
 - `feat!:`, or `fix!:`, `refactor!:`, etc., which represent a breaking change
   (indicated by the `!`) and will result in a SemVer major.
 
-[channel]: https://discord.gg/zAQBDEq
-[codespaces]: https://codespaces.new/fission-codes/stack
-[discussions]: https://github.com/fission-codes/stack/discussions
-[issue]: https://github.com/fission-codes/stack/issues
-[docs]: https://fission-codes.github.io/stack/
+[codespaces]: https://codespaces.new/wnfs-wg/nest
+[discussions]: https://github.com/wnfs-wg/nest/discussions
+[issue]: https://github.com/wnfs-wg/nest/issues
+[docs]: https://wnfs-wg.github.io/nest/
 [sscce]: http://www.sscce.org/
 [signing]: https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits
 [telling-git]: https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key

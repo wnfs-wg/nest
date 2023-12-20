@@ -1,7 +1,5 @@
 /**
- * Information about your app.
- *
- * @group Configuration
+ * Information about an app.
  */
 export interface AppInfo {
   name: string

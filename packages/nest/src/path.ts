@@ -74,6 +74,8 @@ export type Distinctive<P> = DistinctivePath<P>
 
 /**
  * Utility function to create a `DirectoryPath`
+ *
+ * @group 🪺 :: START HERE
  */
 export function directory<P extends Partition>(
   ...args: PartitionedNonEmpty<P>
@@ -94,6 +96,8 @@ export function directory(...args: Segments): DirectoryPath<Segments> {
 
 /**
  * Utility function to create a `FilePath`
+ *
+ * @group 🪺 :: START HERE
  */
 export function file<P extends Partition>(
   ...args: PartitionedNonEmpty<P>
@@ -109,6 +113,8 @@ export function file(...args: Segments): FilePath<Segments> {
 
 /**
  * Utility function to create a path based on the given `Kind`
+ *
+ * @group 🪺 :: START HERE
  */
 export function fromKind<P extends Partition>(
   kind: Kind.Directory,
@@ -160,6 +166,8 @@ export function fromKind(
 
 /**
  * Utility function to create a root `DirectoryPath`
+ *
+ * @group 🪺 :: START HERE
  */
 export function root(): DirectoryPath<Segments> {
   return { directory: [] }
@@ -167,6 +175,8 @@ export function root(): DirectoryPath<Segments> {
 
 /**
  * Utility function create an app data path.
+ *
+ * @group 🪺 :: START HERE
  */
 export function appData<P extends Partition>(
   partition: P,
@@ -205,6 +215,8 @@ export function appData<P extends Partition>(
  * files should have the format `path/to/file`.
  *
  * Leading forward slashes are removed too, so you can pass absolute paths.
+ *
+ * @group POSIX
  */
 export function fromPosix(path: string): DistinctivePath<Segments> {
   const split = path.replace(/^\/+/, '').split('/')
@@ -218,6 +230,8 @@ export function fromPosix(path: string): DistinctivePath<Segments> {
  *
  * Directories will have the format `path/to/dir/` and
  * files will have the format `path/to/file`.
+ *
+ * @group POSIX
  */
 export function toPosix(
   path: DistinctivePath<Segments>,

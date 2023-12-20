@@ -31,8 +31,7 @@ jobs:
   npm:
     needs: release
     if: |
-      contains(fromJson(needs.release.outputs.paths_released), 'packages/package1') ||
-      contains(fromJson(needs.release.outputs.paths_released), 'packages/package2')
+      contains(fromJson(needs.release.outputs.paths_released), 'packages/nest')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -56,6 +55,5 @@ jobs:
   docs:
     needs: release
     if: |
-      contains(fromJson(needs.release.outputs.paths_released), 'packages/package1') ||
-      contains(fromJson(needs.release.outputs.paths_released), 'packages/package2')
+      contains(fromJson(needs.release.outputs.paths_released), 'packages/nest')
     uses: ./.github/workflows/reusable-docs.yml
