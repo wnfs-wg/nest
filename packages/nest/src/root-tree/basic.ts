@@ -258,15 +258,15 @@ export class BasicRootTree implements RootTree {
     const links = [
       {
         Name: RootBranch.Exchange,
-        Hash: CID.decode(exchangeRoot),
+        Hash: CID.decode(exchangeRoot as Uint8Array),
       },
       {
         Name: RootBranch.Private,
-        Hash: CID.decode(privateForest),
+        Hash: CID.decode(privateForest as Uint8Array),
       },
       {
         Name: RootBranch.Public,
-        Hash: CID.decode(publicRoot),
+        Hash: CID.decode(publicRoot as Uint8Array),
       },
       {
         Name: RootBranch.Unix,

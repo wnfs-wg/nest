@@ -234,7 +234,7 @@ export class TransactionContext {
   }
 
   /** @group Querying */
-  ls = this.listDirectory
+  ls = this.listDirectory // eslint-disable-line @typescript-eslint/unbound-method
 
   /** @group Querying */
   async read<D extends DataType, V = unknown>(
@@ -331,7 +331,7 @@ export class TransactionContext {
   }
 
   /** @group Mutating */
-  cp = this.copy
+  cp = this.copy // eslint-disable-line @typescript-eslint/unbound-method
 
   /** @group Mutating */
   async createDirectory(
@@ -389,7 +389,7 @@ export class TransactionContext {
   }
 
   /** @group Mutating */
-  mkdir = this.ensureDirectory
+  mkdir = this.ensureDirectory // eslint-disable-line @typescript-eslint/unbound-method
 
   /** @group Mutating */
   async move(
@@ -410,7 +410,7 @@ export class TransactionContext {
   }
 
   /** @group Mutating */
-  mv = this.move
+  mv = this.move // eslint-disable-line @typescript-eslint/unbound-method
 
   /** @group Mutating */
   async remove(
@@ -440,7 +440,7 @@ export class TransactionContext {
   }
 
   /** @group Mutating */
-  rm = this.remove
+  rm = this.remove // eslint-disable-line @typescript-eslint/unbound-method
 
   /** @group Mutating */
   async rename(

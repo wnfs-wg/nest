@@ -2,7 +2,10 @@
   "name": "@wnfs-wg/nest-root",
   "version": "0.0.0",
   "private": true,
-  "workspaces": ["packages/*", "examples/*"],
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
   "packageManager": "pnpm@8.6.1",
   "engines": {
     "node": ">=18"
@@ -38,7 +41,11 @@
   },
   "prettier": "@fission-codes/eslint-config/prettier.config.js",
   "eslintConfig": {
-    "extends": ["@fission-codes"],
-    "ignorePatterns": ["docs"]
+    "extends": [
+      "@fission-codes"
+    ],
+    "ignorePatterns": [
+      "docs"
+    ]
   }
 }

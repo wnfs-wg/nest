@@ -56,7 +56,7 @@ export function dataToBytes(dataType: DataType, data: any): Uint8Array {
     }
 
     case 'utf8': {
-      return new TextEncoder().encode(data)
+      return new TextEncoder().encode(data as string)
     }
   }
 }

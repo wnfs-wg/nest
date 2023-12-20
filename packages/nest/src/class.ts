@@ -1,5 +1,5 @@
 import type { Blockstore } from 'interface-blockstore'
-import type { PublicDirectory, PublicFile } from 'wnfs'
+import type { PrivateForest, PublicDirectory, PublicFile } from 'wnfs'
 
 import { CID } from 'multiformats/cid'
 import { AccessKey, PrivateDirectory, PrivateFile, PrivateNode } from 'wnfs'
@@ -305,7 +305,7 @@ export class FileSystem {
         const [accessKey, privateForest] = storeResult
 
         this.#rootTree = await this.#rootTree.replacePrivateForest(
-          privateForest,
+          privateForest as PrivateForest,
           [
             {
               path: Path.withPartition('private', n.path),
@@ -383,7 +383,7 @@ export class FileSystem {
   }
 
   /** @group Querying */
-  ls = this.listDirectory
+  ls = this.listDirectory // eslint-disable-line @typescript-eslint/unbound-method
 
   /** @group Querying */
   async read<D extends DataType, V = unknown>(
@@ -441,7 +441,7 @@ export class FileSystem {
   }
 
   /** @group Mutating */
-  cp = this.copy
+  cp = this.copy // eslint-disable-line @typescript-eslint/unbound-method
 
   /** @group Mutating */
   async createDirectory<P extends Partition>(
@@ -532,7 +532,7 @@ export class FileSystem {
   }
 
   /** @group Mutating */
-  mkdir = this.ensureDirectory
+  mkdir = this.ensureDirectory // eslint-disable-line @typescript-eslint/unbound-method
 
   /** @group Mutating */
   async move<From extends Partition, To extends Partition>(
@@ -557,7 +557,7 @@ export class FileSystem {
   }
 
   /** @group Mutating */
-  mv = this.move
+  mv = this.move // eslint-disable-line @typescript-eslint/unbound-method
 
   /** @group Mutating */
   async remove(
@@ -578,7 +578,7 @@ export class FileSystem {
   }
 
   /** @group Mutating */
-  rm = this.remove
+  rm = this.remove // eslint-disable-line @typescript-eslint/unbound-method
 
   /** @group Mutating */
   async rename<P extends Partition>(
@@ -730,10 +730,10 @@ export class FileSystem {
 
         const capsuleCID = await fileOrDir
           .store(Store.wnfs(this.#blockstore))
-          .then((a) => CID.decode(a))
+          .then((a) => CID.decode(a as Uint8Array))
         const contentCID =
           node.isFile() === true
-            ? CID.decode(node.asFile().contentCid())
+            ? CID.decode(node.asFile().contentCid() as Uint8Array)
             : capsuleCID
 
         return {

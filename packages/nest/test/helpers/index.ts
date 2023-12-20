@@ -87,7 +87,9 @@ export async function assertUnixFsFile(
     `${unixRoot.toString()}${pathString}`,
     opts.blockstore
   )
-  const unixBytes = Uint8Arrays.concat(await all(entry.content()))
+
+  const byteArrays: Uint8Array[] = await all(entry.content())
+  const unixBytes = Uint8Arrays.concat(byteArrays)
 
   assert.equal(Uint8Arrays.equals(unixBytes, bytes), true)
 }

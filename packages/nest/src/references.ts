@@ -40,7 +40,7 @@ export async function capsuleCID(
     ? undefined
     : CID.decode(
         maybeNode.isFile()
-          ? await maybeNode.asFile().store(wnfsBlockstore)
-          : await maybeNode.asDir().store(wnfsBlockstore)
+          ? ((await maybeNode.asFile().store(wnfsBlockstore)) as Uint8Array)
+          : ((await maybeNode.asDir().store(wnfsBlockstore)) as Uint8Array)
       )
 }

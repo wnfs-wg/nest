@@ -57,7 +57,7 @@
   "types": "dist/src/index.d.ts",
   "browser": {
     "crypto": false,
-    "./dist/src/crypto.js": "./dist/src/crypto-browser.js"
+    "./src/crypto.js": "./src/crypto-browser.js"
   },
   "typesVersions": {
     "*": {
@@ -75,7 +75,7 @@
   },
   "files": ["src", "dist/src/*.d.ts", "dist/src/*.d.ts.map"],
   "scripts": {
-    "lint": "tsc --build && eslint . && prettier --check '**/*.{js,ts,yml,json}' --ignore-path ../../.gitignore",
+    "lint": "tsc --build && eslint . --quiet --ignore-pattern='readme.md' && prettier --check '**/*.{js,ts,yml,json}' --ignore-path ../../.gitignore",
     "build": "tsc --build",
     "test": "pnpm run test:node && pnpm run test:browser",
     "test:node": "mocha 'test/**/!(*.browser).test.ts' --bail --timeout 30000",

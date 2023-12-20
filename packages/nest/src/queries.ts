@@ -109,7 +109,10 @@ export const publicRead = (options?: { offset: number; length: number }) => {
       .publicRoot()
       .read(params.pathSegments, Store.wnfs(params.blockstore))
 
-    return await publicReadFromCID(CID.decode(result), options)(params)
+    return await publicReadFromCID(
+      CID.decode(result as Uint8Array),
+      options
+    )(params)
   }
 }
 
