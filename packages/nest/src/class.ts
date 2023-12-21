@@ -4,7 +4,7 @@ import type { PrivateForest, PublicDirectory, PublicFile } from 'wnfs'
 import { CID } from 'multiformats/cid'
 import { AccessKey, PrivateDirectory, PrivateFile, PrivateNode } from 'wnfs'
 
-import debounce from 'debounce'
+import debounce from 'p-debounce'
 import Emittery, {
   type EmitteryOncePromise,
   type OmnipresentEventData,
@@ -64,7 +64,7 @@ export interface FileSystemOptions {
 /** @group 🪺 :: START HERE */
 export class FileSystem {
   readonly #blockstore: Blockstore
-  readonly #debouncedDataRootUpdate: debounce.DebouncedFunction<any>
+  readonly #debouncedDataRootUpdate: (...dataRoots: CID[]) => Promise<void>
   readonly #eventEmitter: Emittery<Events>
   readonly #onCommit: CommitVerifier
   readonly #rng: Rng.Rng
@@ -797,6 +797,6 @@ export class FileSystem {
   // ㊙️  ▒▒  PUBLISHING
 
   async #publish(dataRoot: CID): Promise<void> {
-    await this.#debouncedDataRootUpdate(dataRoot)
+    this.#debouncedDataRootUpdate(dataRoot)
   }
 }

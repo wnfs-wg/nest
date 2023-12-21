@@ -926,9 +926,7 @@ describe('File System Class', () => {
     })
 
     await fs.write(Path.file('private', 'a'), 'bytes', new Uint8Array())
-
     await fs.write(Path.file('private', 'b'), 'bytes', new Uint8Array())
-
     await fs.write(Path.file('private', 'c'), 'bytes', new Uint8Array())
 
     const d = await fs.write(
