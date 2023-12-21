@@ -797,6 +797,7 @@ export class FileSystem {
   // ㊙️  ▒▒  PUBLISHING
 
   async #publish(dataRoot: CID): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.#debouncedDataRootUpdate(dataRoot)
   }
 }
