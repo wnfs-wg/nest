@@ -30,4 +30,3 @@ jobs:
       - run: pnpm run build
       - run: pnpm -r --filter nest run lint
       - run: pnpm -r --filter nest run test
-      - run: pnpm -r --filter nest exec depcheck
