@@ -1009,28 +1009,20 @@ describe('File System Class', () => {
     assert.equal(await fs.read(Path.file('public', 'file'), 'utf8'), '💃')
   })
 
-  // async function transaction(): Promise<void> {
-  //   await fs
-  //     .transaction(async (t) => {
-  //       await t.write(Path.file('private', 'file'), 'utf8', '💃')
-  //       throw new Error('Whoops')
-  //     })
-  //     .catch((_error) => {})
-  // }
+  it("doesn't commit a transaction when an error occurs inside of the transaction", async () => {
+    await fs
+      .transaction(async (t) => {
+        await t.write(Path.file('private', 'file'), 'utf8', '💃')
+        throw new Error('Whoops')
+      })
+      .catch((_error) => {})
 
-  // it("doesn't commit a transaction when an error occurs inside of the transaction", async () => {
-  //   const tracker = new assert.CallTracker()
-  //   const tracked = tracker.calls(transaction, 1)
-
-  //   await tracked()
-  //   tracker.verify()
-
-  //   try {
-  //     await fs.read(Path.file('private', 'file'), 'utf8')
-  //   } catch (error) {
-  //     assert(error)
-  //   }
-  // })
+    try {
+      await fs.read(Path.file('private', 'file'), 'utf8')
+    } catch (error) {
+      assert(error)
+    }
+  })
 
   it("doesn't commit a transaction when onCommit returns `false`", async () => {
     fs = await FileSystem.create({
@@ -1041,7 +1033,10 @@ describe('File System Class', () => {
 
     _mounts = await fs.mountPrivateNodes([{ path: Path.root() }])
 
-    // TODO:
-    // await fs.write(Path.file('private', 'test', 'file'), 'utf8', '🔥')
+    const result = await fs.transaction(async (t) => {
+      await t.write(Path.file('private', 'file'), 'utf8', '💃')
+    })
+
+    assert.equal(result, 'no-op')
   })
 })
