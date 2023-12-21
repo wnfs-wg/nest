@@ -64,7 +64,10 @@ export interface FileSystemOptions {
 /** @group 🪺 :: START HERE */
 export class FileSystem {
   readonly #blockstore: Blockstore
-  readonly #debouncedDataRootUpdate: (...dataRoots: CID[]) => Promise<void>
+  readonly #debouncedDataRootUpdate: (
+    ...args: Array<{ dataRoot: CID; modifications: Modification[] }>
+  ) => Promise<void>
+
   readonly #eventEmitter: Emittery<Events>
   readonly #onCommit: CommitVerifier
   readonly #rng: Rng.Rng
@@ -86,10 +89,13 @@ export class FileSystem {
     this.#rootTree = rootTree
 
     this.#debouncedDataRootUpdate = debounce(
-      async (...dataRoots: CID[]): Promise<void> => {
-        const dataRoot = dataRoots.at(-1)
+      async (
+        ...args: Array<{ dataRoot: CID; modifications: Modification[] }>
+      ): Promise<void> => {
+        const modifications = args.flatMap((a) => a.modifications)
+        const dataRoot = args.at(-1)?.dataRoot
         if (dataRoot !== undefined) {
-          await this.#eventEmitter.emit('publish', { dataRoot })
+          await this.#eventEmitter.emit('publish', { dataRoot, modifications })
         }
       },
       settleTimeBeforePublish
@@ -664,13 +670,13 @@ export class FileSystem {
       mutationOptions.skipPublish === false ||
       mutationOptions.skipPublish === undefined
     ) {
-      await this.#publish(dataRoot)
+      await this.#publish(dataRoot, modifications)
     }
 
     // Fin
     return {
-      modifications,
       dataRoot,
+      modifications,
     }
   }
 
@@ -796,8 +802,8 @@ export class FileSystem {
 
   // ㊙️  ▒▒  PUBLISHING
 
-  async #publish(dataRoot: CID): Promise<void> {
+  async #publish(dataRoot: CID, modifications: Modification[]): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    this.#debouncedDataRootUpdate(dataRoot)
+    this.#debouncedDataRootUpdate({ dataRoot, modifications })
   }
 }

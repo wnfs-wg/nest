@@ -9,7 +9,10 @@ export type Events = {
     dataRoot: CID
     modifications: Modification[]
   }
-  publish: { dataRoot: CID }
+  publish: {
+    dataRoot: CID
+    modifications: Modification[]
+  }
 }
 
 export type Listener<
