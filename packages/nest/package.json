@@ -128,7 +128,8 @@
     "blockstore-core": "^4.3.8",
     "fast-check": "^3.14.0",
     "mocha": "^10.2.0",
-    "playwright-test": "^14.0.0"
+    "playwright-test": "^14.0.0",
+    "tsx": "^4.6.2"
   },
   "publishConfig": {
     "provenance": true
