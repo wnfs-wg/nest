@@ -28,7 +28,7 @@ describe('File System Class', () => {
   }>
 
   const fsOpts = {
-    settleTimeBeforePublish: 250,
+    settleTimeBeforePublish: 500,
   }
 
   // HOOKS
