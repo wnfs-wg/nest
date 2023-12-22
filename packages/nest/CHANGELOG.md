@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/wnfs-wg/nest/compare/nest-v0.2.1...nest-v0.2.2) (2023-12-22)
+
+
+### Bug Fixes
+
+* **nest:** add missing files to npm output ([3276417](https://github.com/wnfs-wg/nest/commit/3276417138f6ce54143939dc5dfefecdf8dbaa16))
+
 ## [0.2.1](https://github.com/wnfs-wg/nest/compare/nest-v0.2.0...nest-v0.2.1) (2023-12-22)
 
 
