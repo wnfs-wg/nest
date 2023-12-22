@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/wnfs-wg/nest/compare/nest-v0.2.0...nest-v0.2.1) (2023-12-22)
+
+
+### Bug Fixes
+
+* **nest:** add missing crypto browser redirect ([5d48dae](https://github.com/wnfs-wg/nest/commit/5d48daeb8a5f6547e05d6c6f3e6fdbe0f01ddb92))
+
 ## [0.2.0](https://github.com/wnfs-wg/nest/compare/nest-v0.1.0...nest-v0.2.0) (2023-12-21)
 
 
