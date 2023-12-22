@@ -95,9 +95,8 @@
     }
   },
   "files": [
-    "src",
-    "dist/src/*.d.ts",
-    "dist/src/*.d.ts.map"
+    "dist",
+    "src"
   ],
   "scripts": {
     "lint": "tsc --build && eslint . --quiet --ignore-pattern='readme.md' && prettier --check '**/*.{js,ts,yml,json}' --ignore-path ../../.gitignore",
