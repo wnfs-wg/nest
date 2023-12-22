@@ -57,7 +57,8 @@
   "types": "dist/src/index.d.ts",
   "browser": {
     "crypto": false,
-    "./src/crypto.js": "./src/crypto-browser.js"
+    "./src/crypto.js": "./src/crypto-browser.js",
+    "./dist/src/crypto.js": "./dist/src/crypto-browser.js"
   },
   "typesVersions": {
     "*": {
