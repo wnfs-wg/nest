@@ -48,8 +48,8 @@ importers:
         specifier: ^1.1.6
         version: 1.1.6
       uint8arrays:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^5.0.1
+        version: 5.0.1
     devDependencies:
       '@babel/core':
         specifier: ^7.23.6
@@ -100,8 +100,8 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       uint8arrays:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^5.0.1
+        version: 5.0.1
       wnfs:
         specifier: 0.1.27
         version: 0.1.27
@@ -1894,7 +1894,7 @@ packages:
       it-merge: 3.0.3
       it-pushable: 3.2.3
       multiformats: 12.1.3
-      uint8arrays: 5.0.0
+      uint8arrays: 5.0.1
     transitivePeerDependencies:
       - supports-color
 
@@ -3554,7 +3554,7 @@ packages:
     resolution: {integrity: sha512-J/8PN8TnB5xxCRtgu9Vx3zExdOzcTU5/DBF2dlU41deX1GW6/SPpbJo5DRNSnvzfjmwJ7YhUOIFXyccUp8nuAA==}
     dependencies:
       interface-store: 5.1.5
-      uint8arrays: 5.0.0
+      uint8arrays: 5.0.1
 
   /interface-store@5.1.5:
     resolution: {integrity: sha512-X0KnJBk3o+YL13MxZBMwa88/b3Mdrpm0yPzkSTKDDVn9BSPH7UK6W+ZtIPO2bxKOQVmq7zqOwAnYnpfqWjb6/g==}
@@ -4386,6 +4386,9 @@ packages:
   /multiformats@12.1.3:
     resolution: {integrity: sha512-eajQ/ZH7qXZQR2AgtfpmSMizQzmyYVmCql7pdhldPuYQi4atACekbJaQplk6dWyIi10jCaFnd6pqvcEFXjbaJw==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+
+  /multiformats@13.0.0:
+    resolution: {integrity: sha512-xiIB0p7EKmETm3wyKedOg/xuyQ18PoWwXCzzgpZAiDxL9ktl3XTh8AqoDT5kAqRg+DU48XAGPsUJL2Rn6Bx3Lw==}
 
   /multimatch@5.0.0:
     resolution: {integrity: sha512-ypMKuglUrZUD99Tk2bUQ+xNQj43lPEfAeX2o9cTteAmShXy2VHDJpuwu1o0xqoKCt9jLVAvwyFKdLTPXKAfJyA==}
@@ -5702,10 +5705,10 @@ packages:
     dependencies:
       multiformats: 12.1.3
 
-  /uint8arrays@5.0.0:
-    resolution: {integrity: sha512-RWO7gR4x6syxnKDfZO8mDCsaaYs1/BqZCxlHgrcRge50E9GTnLmtoA4kwFSGIL4s3dQkryeTkvtG6oEFEya3yg==}
+  /uint8arrays@5.0.1:
+    resolution: {integrity: sha512-ND5RpJAnPgHmZT7hWD/2T4BwRp04j8NLKvMKC/7bhiEwEjUMkQ4kvBKiH6hOqbljd6qJ2xS8reL3vl1e33grOQ==}
     dependencies:
-      multiformats: 12.1.3
+      multiformats: 13.0.0
 
   /unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}

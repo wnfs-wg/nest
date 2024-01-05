@@ -17,7 +17,7 @@
   "dependencies": {
     "@wnfs-wg/nest": "*",
     "blockstore-idb": "^1.1.6",
-    "uint8arrays": "^5.0.0"
+    "uint8arrays": "^5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",
