@@ -82,8 +82,8 @@ importers:
         specifier: ^5.2.7
         version: 5.2.7
       ipfs-unixfs:
-        specifier: ^11.1.0
-        version: 11.1.0
+        specifier: ^11.1.2
+        version: 11.1.2
       ipfs-unixfs-exporter:
         specifier: ^13.2.2
         version: 13.2.2
@@ -3578,7 +3578,7 @@ packages:
       err-code: 3.0.1
       hamt-sharding: 3.0.2
       interface-blockstore: 5.2.7
-      ipfs-unixfs: 11.1.0
+      ipfs-unixfs: 11.1.2
       it-filter: 3.0.4
       it-last: 3.0.4
       it-map: 3.0.5
@@ -3601,7 +3601,7 @@ packages:
       hamt-sharding: 3.0.2
       interface-blockstore: 5.2.7
       interface-store: 5.1.5
-      ipfs-unixfs: 11.1.0
+      ipfs-unixfs: 11.1.2
       it-all: 3.0.4
       it-batch: 3.0.4
       it-first: 3.0.4
@@ -3616,8 +3616,8 @@ packages:
       - supports-color
     dev: false
 
-  /ipfs-unixfs@11.1.0:
-    resolution: {integrity: sha512-Lq37nKLJOpRFjx3rcg3y+ZwUxBX7jluKfIt5UPp6wb1L3dP0sj1yaLR0Yg2CdGYvHWyUpZD1iTnT8upL0ToDOw==}
+  /ipfs-unixfs@11.1.2:
+    resolution: {integrity: sha512-HVjrACOhU8RgMskcrfydk+FDAE9pFKr8tneKLaVYQ2f81HUKXoiSdgsAJY/jt7Ieyj4tE12TZGduIeWtNpScOw==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     dependencies:
       err-code: 3.0.1
