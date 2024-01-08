@@ -29,7 +29,7 @@
     "typedoc": "^0.25.4",
     "typedoc-plugin-missing-exports": "^2.1.0",
     "typedoc-plugin-rename-defaults": "^0.7.0",
-    "typedoc-plugin-zod": "^1.1.0",
+    "typedoc-plugin-zod": "^1.1.2",
     "typescript": "5.3.3"
   },
   "simple-git-hooks": {
