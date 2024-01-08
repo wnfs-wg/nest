@@ -125,7 +125,7 @@
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.10.6",
     "assert": "^2.1.0",
-    "blockstore-core": "^4.3.8",
+    "blockstore-core": "^4.3.10",
     "fast-check": "^3.15.0",
     "mocha": "^10.2.0",
     "playwright-test": "^14.0.0",
