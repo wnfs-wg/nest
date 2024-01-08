@@ -85,8 +85,8 @@ importers:
         specifier: ^11.1.2
         version: 11.1.2
       ipfs-unixfs-exporter:
-        specifier: ^13.2.2
-        version: 13.2.2
+        specifier: ^13.2.5
+        version: 13.2.5
       ipfs-unixfs-importer:
         specifier: ^15.2.1
         version: 15.2.1
@@ -3340,8 +3340,8 @@ packages:
       side-channel: 1.0.4
     dev: true
 
-  /ipfs-unixfs-exporter@13.2.2:
-    resolution: {integrity: sha512-poCxSte+SdQzuPc/Sm+gx/86VJu+IEsW6/Cfkq29yEUZDG8QuCvTkvuqAysKAYuN40aR9SjYqwYFRW/hsvspSw==}
+  /ipfs-unixfs-exporter@13.2.5:
+    resolution: {integrity: sha512-NkrLCE8qOrM7InhUWzgZ6ZtJGVFrb2oEqmd0PWNiT8QhD8Aw2dS2wBuiG2yoJ34qPm4MgMfQa3FOxmteg3JjsQ==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     dependencies:
       '@ipld/dag-cbor': 9.0.6
@@ -3357,10 +3357,10 @@ packages:
       it-parallel: 3.0.6
       it-pipe: 3.0.1
       it-pushable: 3.2.3
-      multiformats: 12.1.3
-      p-queue: 7.4.1
+      multiformats: 13.0.0
+      p-queue: 8.0.1
       progress-events: 1.0.0
-      uint8arrays: 4.0.9
+      uint8arrays: 5.0.1
     dev: false
 
   /ipfs-unixfs-importer@15.2.1:
@@ -4422,23 +4422,17 @@ packages:
     engines: {node: '>=16'}
     dev: true
 
-  /p-queue@7.4.1:
-    resolution: {integrity: sha512-vRpMXmIkYF2/1hLBKisKeVYJZ8S2tZ0zEAmIJgdVKP2nq0nh4qCdf8bgw+ZgKrkh71AOCaqzwbJJk1WtdcF3VA==}
-    engines: {node: '>=12'}
+  /p-queue@8.0.1:
+    resolution: {integrity: sha512-NXzu9aQJTAzbBqOt2hwsR63ea7yvxJc0PwN/zobNAudYfb1B7R08SzB4TsLeSbUCuG467NhnoT0oO6w1qRO+BA==}
+    engines: {node: '>=18'}
     dependencies:
       eventemitter3: 5.0.1
-      p-timeout: 5.1.0
-    dev: false
-
-  /p-timeout@5.1.0:
-    resolution: {integrity: sha512-auFDyzzzGZZZdHz3BtET9VEz0SE/uMEAx7uWfGPucfzEwwe/xH0iVeZibQmANYE/hp9T2+UUZT5m+BKyrDp3Ew==}
-    engines: {node: '>=12'}
+      p-timeout: 6.1.2
     dev: false
 
   /p-timeout@6.1.2:
     resolution: {integrity: sha512-UbD77BuZ9Bc9aABo74gfXhNvzC9Tx7SxtHSh1fxvx3jTLLYvmVhiQZZrJzqqU0jKbN32kb5VOKiLEQI/3bIjgQ==}
     engines: {node: '>=14.16'}
-    dev: true
 
   /p-try@2.2.0:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
