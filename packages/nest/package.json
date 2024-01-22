@@ -111,7 +111,7 @@
     "emittery": "^1.0.1",
     "interface-blockstore": "^5.2.7",
     "ipfs-unixfs": "^11.1.2",
-    "ipfs-unixfs-exporter": "^13.2.2",
+    "ipfs-unixfs-exporter": "^13.4.0",
     "ipfs-unixfs-importer": "^15.2.1",
     "it-all": "^3.0.4",
     "multiformats": "^12.1.3",
