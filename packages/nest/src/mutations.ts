@@ -12,7 +12,6 @@ import type {
 } from './types/internal.js'
 
 import * as Store from './store.js'
-import * as Unix from './unix.js'
 
 import { searchLatest } from './common.js'
 
@@ -51,13 +50,11 @@ export const publicRemove = () => {
 
 export const publicWrite = (bytes: Uint8Array) => {
   return async (params: PublicParams): Promise<WnfsPublicResult> => {
-    const cid = await Unix.importFile(bytes, params.blockstore)
-
     return await params.rootTree
       .publicRoot()
       .write(
         params.pathSegments,
-        cid.bytes,
+        bytes,
         new Date(),
         Store.wnfs(params.blockstore)
       )

@@ -33,7 +33,7 @@ export function createDirectory(
 export async function exportFile(
   cid: CID,
   store: Blockstore,
-  options?: { offset: number; length: number }
+  options?: { offset?: number; length?: number }
 ): Promise<Uint8Array> {
   const offset = options?.offset
   const length = options?.length
