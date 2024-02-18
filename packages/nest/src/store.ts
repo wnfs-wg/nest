@@ -1,14 +1,12 @@
 import type { Blockstore } from 'interface-blockstore'
+import type { BlockStore as WnfsBlockStore } from 'wnfs'
 
 import { CID } from 'multiformats/cid'
 import { sha256 } from 'multiformats/hashes/sha2'
 
 // 🧩
 
-export interface WnfsBlockStore {
-  getBlock: (cid: Uint8Array) => Promise<Uint8Array | undefined>
-  putBlock: (bytes: Uint8Array, code: number) => Promise<Uint8Array>
-}
+export type { BlockStore as WnfsBlockStore } from 'wnfs'
 
 // 🛠️
 
@@ -24,10 +22,14 @@ export function wnfs(blockstore: Blockstore): WnfsBlockStore {
       return await blockstore.get(decodedCid)
     },
 
-    async putBlock(bytes: Uint8Array, code: number): Promise<Uint8Array> {
-      const c = await cid(bytes, code)
-      await blockstore.put(c, bytes)
-      return c.bytes
+    async hasBlock(cid: Uint8Array): Promise<boolean> {
+      const decodedCid = CID.decode(cid)
+      return await blockstore.has(decodedCid)
+    },
+
+    async putBlockKeyed(cid: Uint8Array, bytes: Uint8Array): Promise<void> {
+      const decodedCid = CID.decode(cid)
+      await blockstore.put(decodedCid, bytes)
     },
   }
 }

@@ -246,7 +246,7 @@ export class TransactionContext {
           capsuleKey: Uint8Array
         },
     dataType: DataType,
-    options?: { offset: number; length: number }
+    options?: { offset?: number; length?: number }
   ): Promise<DataForType<D, V>>
   async read<V = unknown>(
     arg:
@@ -257,7 +257,7 @@ export class TransactionContext {
           capsuleKey: Uint8Array
         },
     dataType: DataType,
-    options?: { offset: number; length: number }
+    options?: { offset?: number; length?: number }
   ): Promise<AnySupportedDataType<V>> {
     let bytes
 
@@ -268,14 +268,22 @@ export class TransactionContext {
         options
       )(this.#publicContext())
     } else if ('capsuleCID' in arg) {
+      const wnfsBlockstore = Store.wnfs(this.#blockstore)
+
       // Public content from capsule CID
       const publicFile: PublicFile = await PublicFile.load(
         arg.capsuleCID.bytes,
-        Store.wnfs(this.#blockstore)
+        wnfsBlockstore
       )
 
       return await this.read<DataType, V>(
-        { contentCID: CID.decode(publicFile.contentCid()) },
+        {
+          contentCID: CID.decode(
+            await publicFile
+              .getRawContentCid(wnfsBlockstore)
+              .then((u) => u as Uint8Array)
+          ),
+        },
         dataType,
         options
       )

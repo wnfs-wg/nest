@@ -1,3 +1,4 @@
+import type { CID } from 'multiformats/cid'
 import type { Blockstore } from 'interface-blockstore'
 import type {
   AccessKey,
@@ -8,7 +9,6 @@ import type {
 } from 'wnfs'
 
 import { PrivateNode } from 'wnfs'
-import { CID } from 'multiformats/cid'
 
 import * as Store from './store.js'
 import * as Path from './path.js'
@@ -103,22 +103,33 @@ export const publicListDirectoryWithKind = () => {
   }
 }
 
-export const publicRead = (options?: { offset: number; length: number }) => {
+export const publicRead = (options?: { offset?: number; length?: number }) => {
   return async (params: PublicParams): Promise<Uint8Array> => {
-    const result = await params.rootTree
-      .publicRoot()
-      .read(params.pathSegments, Store.wnfs(params.blockstore))
+    const wnfsBlockStore = Store.wnfs(params.blockstore)
 
-    return await publicReadFromCID(
-      CID.decode(result as Uint8Array),
-      options
-    )(params)
+    const node: PublicNode | null | undefined = await params.rootTree
+      .publicRoot()
+      .getNode(params.pathSegments, wnfsBlockStore)
+
+    if (node === null || node === undefined) {
+      throw new Error('Failed to find public node')
+    } else if (node.isDir()) {
+      throw new Error('Expected node to be a file')
+    }
+
+    return await node
+      .asFile()
+      .readAt(
+        options?.offset ?? 0,
+        options?.length ?? undefined,
+        wnfsBlockStore
+      )
   }
 }
 
 export const publicReadFromCID = (
   cid: CID,
-  options?: { offset: number; length: number }
+  options?: { offset?: number; length?: number }
 ) => {
   return async (context: PublicContext): Promise<Uint8Array> => {
     return await Unix.exportFile(cid, context.blockstore, options)
@@ -243,46 +254,51 @@ export const privateListDirectoryWithKind = () => {
   }
 }
 
-export const privateRead = (_options?: { offset: number; length: number }) => {
+export const privateRead = (options?: { offset?: number; length?: number }) => {
   return async (params: PrivateParams): Promise<Uint8Array> => {
-    // TODO: Respect `offset` and `length` options when private streaming API is exposed in rs-wnfs
-    // const offset = options?.offset
-    // const length = options?.length
+    let node
 
-    let bytes
+    if (params.node.isDir()) {
+      if (params.remainder.length === 0) {
+        throw new Error('Expected node to be a file')
+      }
 
-    if (params.node.isFile()) {
-      bytes = await params.node
-        .asFile()
-        .getContent(
-          params.rootTree.privateForest(),
-          Store.wnfs(params.blockstore)
-        )
-    } else {
-      const { result } = await params.node
+      const tmpNode: PrivateNode | null | undefined = await params.node
         .asDir()
-        .read(
+        .getNode(
           params.remainder,
           searchLatest(),
           params.rootTree.privateForest(),
           Store.wnfs(params.blockstore)
         )
-      bytes = result
+
+      if (tmpNode === null || tmpNode === undefined) {
+        throw new Error('Failed to find private node')
+      } else if (tmpNode.isDir()) {
+        throw new Error('Expected node to be a file')
+      }
+
+      node = tmpNode
+    } else {
+      node = params.node
     }
 
-    return bytes
+    return await node
+      .asFile()
+      .readAt(
+        options?.offset ?? 0,
+        options?.length ?? undefined,
+        params.rootTree.privateForest(),
+        Store.wnfs(params.blockstore)
+      )
   }
 }
 
 export const privateReadFromAccessKey = (
   accessKey: AccessKey,
-  _options?: { offset: number; length: number }
+  options?: { offset?: number; length?: number }
 ) => {
   return async (context: PrivateContext): Promise<Uint8Array> => {
-    // TODO: Respect `offset` and `length` options when private streaming API is exposed in rs-wnfs
-    // const offset = options?.offset
-    // const length = options?.length
-
     // Retrieve node
     const node = await PrivateNode.load(
       accessKey,
@@ -294,7 +310,9 @@ export const privateReadFromAccessKey = (
       const file: PrivateFile = node.asFile()
 
       // TODO: Respect the offset and length options when available in rs-wnfs
-      return await file.getContent(
+      return await file.readAt(
+        options?.offset ?? 0,
+        options?.length ?? undefined,
         context.rootTree.privateForest(),
         Store.wnfs(context.blockstore)
       )

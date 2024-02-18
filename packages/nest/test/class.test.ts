@@ -8,7 +8,6 @@ import type { CID } from 'multiformats'
 import { MemoryBlockstore } from 'blockstore-core/memory'
 
 import * as Path from '../src/path.js'
-import * as Unix from '../src/unix.js'
 
 import type { Modification } from '../src/types.js'
 import { FileSystem } from '../src/class.js'
@@ -52,14 +51,14 @@ describe('File System Class', () => {
     const publicPath = Path.file('public', 'nested-public', 'public.txt')
     const privatePath = Path.file('private', 'nested-private', 'private.txt')
 
-    const { contentCID } = await fs.write(publicPath, 'utf8', 'public')
+    await fs.write(publicPath, 'utf8', 'public')
     const { capsuleKey, dataRoot } = await fs.write(
       privatePath,
       'utf8',
       'private'
     )
 
-    const contentBytes = await Unix.exportFile(contentCID, blockstore)
+    const contentBytes = await fs.read(publicPath, 'bytes')
 
     assert.equal(new TextDecoder().decode(contentBytes), 'public')
 
@@ -224,6 +223,74 @@ describe('File System Class', () => {
     )
 
     assert.equal(await fs.read({ capsuleKey }, 'utf8'), '🔐')
+  })
+
+  it('can read partial public content bytes', async () => {
+    const { contentCID, capsuleCID } = await fs.write(
+      Path.file('public', 'file'),
+      'bytes',
+      new Uint8Array([16, 24, 32])
+    )
+
+    assert.equal(
+      await fs
+        .read({ contentCID }, 'bytes', { offset: 1 })
+        .then((a) => a.toString()),
+      new Uint8Array([24, 32]).toString()
+    )
+
+    assert.equal(
+      await fs
+        .read({ capsuleCID }, 'bytes', { offset: 1 })
+        .then((a) => a.toString()),
+      new Uint8Array([24, 32]).toString()
+    )
+  })
+
+  it('can read partial utf8 public content', async () => {
+    const { contentCID, capsuleCID } = await fs.write(
+      Path.file('public', 'file'),
+      'utf8',
+      'abc'
+    )
+
+    assert.equal(
+      await fs.read({ contentCID }, 'utf8', { offset: 1, length: 1 }),
+      'b'
+    )
+
+    assert.equal(
+      await fs.read({ capsuleCID }, 'utf8', { offset: 1, length: 1 }),
+      'b'
+    )
+  })
+
+  it('can read partial private content bytes', async () => {
+    const { capsuleKey } = await fs.write(
+      Path.file('private', 'file'),
+      'bytes',
+      new Uint8Array([16, 24, 32])
+    )
+
+    assert.equal(
+      await fs
+        .read({ capsuleKey }, 'bytes', { offset: 1 })
+        .then((a) => a.toString()),
+      new Uint8Array([24, 32]).toString()
+    )
+  })
+
+  it('can read partial utf8 private content', async () => {
+    const { capsuleKey } = await fs.write(
+      Path.file('private', 'file'),
+      'utf8',
+      'abc'
+    )
+
+    assert.equal(
+      await fs.read({ capsuleKey }, 'utf8', { offset: 1, length: 1 }),
+      'b'
+    )
   })
 
   // DIRECTORIES

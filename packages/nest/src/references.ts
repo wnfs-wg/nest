@@ -21,7 +21,12 @@ export async function contentCID(
 
   const maybeNode: PublicNode | undefined = result ?? undefined
   return maybeNode?.isFile() === true
-    ? CID.decode(maybeNode.asFile().contentCid())
+    ? CID.decode(
+        await maybeNode
+          .asFile()
+          .getRawContentCid(wnfsBlockstore)
+          .then((u) => u as Uint8Array)
+      )
     : undefined
 }
 

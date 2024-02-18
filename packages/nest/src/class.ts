@@ -1,5 +1,10 @@
 import type { Blockstore } from 'interface-blockstore'
-import type { PrivateForest, PublicDirectory, PublicFile } from 'wnfs'
+import type {
+  PrivateForest,
+  PublicDirectory,
+  PublicFile,
+  PublicNode,
+} from 'wnfs'
 
 import { CID } from 'multiformats/cid'
 import { AccessKey, PrivateDirectory, PrivateFile, PrivateNode } from 'wnfs'
@@ -401,7 +406,7 @@ export class FileSystem {
           capsuleKey: Uint8Array
         },
     dataType: D,
-    options?: { offset: number; length: number }
+    options?: { offset?: number; length?: number }
   ): Promise<DataForType<D, V>>
   async read<V = unknown>(
     path:
@@ -412,7 +417,7 @@ export class FileSystem {
           capsuleKey: Uint8Array
         },
     dataType: DataType,
-    options?: { offset: number; length: number }
+    options?: { offset?: number; length?: number }
   ): Promise<AnySupportedDataType<V>> {
     return await this.#transactionContext().read<DataType, V>(
       path,
@@ -722,25 +727,34 @@ export class FileSystem {
 
     switch (partition.name) {
       case 'public': {
-        const node =
+        const wnfsBlockstore = Store.wnfs(this.#blockstore)
+
+        const node: PublicNode | null | undefined =
           partition.segments.length === 0
             ? this.#rootTree.publicRoot().asNode()
             : await this.#rootTree
                 .publicRoot()
-                .getNode(partition.segments, Store.wnfs(this.#blockstore))
+                .getNode(partition.segments, wnfsBlockstore)
+
         if (node === null || node === undefined)
           throw new Error('Failed to find needed public node for infusion')
 
-        const fileOrDir: PublicFile | PublicDirectory =
-          node.isFile() === true ? node.asFile() : node.asDir()
+        const fileOrDir: PublicFile | PublicDirectory = node.isFile()
+          ? node.asFile()
+          : node.asDir()
 
         const capsuleCID = await fileOrDir
           .store(Store.wnfs(this.#blockstore))
           .then((a) => CID.decode(a as Uint8Array))
-        const contentCID =
-          node.isFile() === true
-            ? CID.decode(node.asFile().contentCid() as Uint8Array)
-            : capsuleCID
+
+        const contentCID = node.isFile()
+          ? CID.decode(
+              await node
+                .asFile()
+                .getRawContentCid(wnfsBlockstore)
+                .then((u) => u as Uint8Array)
+            )
+          : capsuleCID
 
         return {
           dataRoot,
