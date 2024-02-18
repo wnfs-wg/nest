@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/wnfs-wg/nest/compare/nest-v0.2.2...nest-v0.3.0) (2024-02-18)
+
+
+### Features
+
+* add ability to read with offset and length + update to wnfs 0.2.0 ([0478813](https://github.com/wnfs-wg/nest/commit/0478813f06d2e4be3e5decfd284ea3f353164ecb))
+
 ## [0.2.2](https://github.com/wnfs-wg/nest/compare/nest-v0.2.1...nest-v0.2.2) (2023-12-22)
 
 
