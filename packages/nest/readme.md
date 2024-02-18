@@ -1,7 +1,6 @@
 # Nest 🪺
 
-[![npm (scoped)](https://img.shields.io/npm/v/%40fission-codes/eslint-config)](https://www.npmjs.com/package/@fission-codes/eslint-config)
-[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/fission-codes/stack/eslint-config.yml)](https://github.com/fission-codes/stack/actions/workflows/eslint-config.yml)
+[![npm (scoped)](https://img.shields.io/npm/v/%40wnfs-wg/nest)](https://www.npmjs.com/package/@wnfs-wg/nest)
 
 A layer around the `wnfs` package that provides a `FileSystem` class, a root tree, mounts, transactions and some other essentials.
 
