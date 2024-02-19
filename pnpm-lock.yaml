@@ -79,7 +79,7 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       interface-blockstore:
-        specifier: ^5.2.10
+        specifier: ^5.0.0
         version: 5.2.10
       ipfs-unixfs:
         specifier: ^11.1.3
