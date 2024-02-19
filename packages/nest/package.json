@@ -62,44 +62,21 @@
   },
   "typesVersions": {
     "*": {
-      ".": [
-        "dist/src/index"
-      ],
-      "app-info": [
-        "dist/src/app-info"
-      ],
-      "class": [
-        "dist/src/class"
-      ],
-      "crypto": [
-        "dist/src/crypto"
-      ],
-      "errors": [
-        "dist/src/errors"
-      ],
-      "events": [
-        "dist/src/events"
-      ],
-      "path": [
-        "dist/src/path"
-      ],
-      "transaction": [
-        "dist/src/transaction"
-      ],
-      "types": [
-        "dist/src/types"
-      ],
-      "version": [
-        "dist/src/version"
-      ]
+      ".": ["dist/src/index"],
+      "app-info": ["dist/src/app-info"],
+      "class": ["dist/src/class"],
+      "crypto": ["dist/src/crypto"],
+      "errors": ["dist/src/errors"],
+      "events": ["dist/src/events"],
+      "path": ["dist/src/path"],
+      "transaction": ["dist/src/transaction"],
+      "types": ["dist/src/types"],
+      "version": ["dist/src/version"]
     }
   },
-  "files": [
-    "dist",
-    "src"
-  ],
+  "files": ["dist", "src"],
   "scripts": {
-    "lint": "tsc --build && eslint . --quiet --ignore-pattern='readme.md' && prettier --check '**/*.{js,ts,yml,json}' --ignore-path ../../.gitignore",
+    "lint": "tsc --build && eslint . --quiet --ignore-pattern='README.md' && prettier --check '**/*.{js,ts,yml,json}' --ignore-path ../../.gitignore",
     "build": "tsc --build",
     "test": "pnpm run test:node && pnpm run test:browser",
     "test:node": "mocha 'test/**/!(*.browser).test.ts' --bail --timeout 30000",
@@ -135,15 +112,11 @@
     "provenance": true
   },
   "eslintConfig": {
-    "extends": [
-      "@fission-codes"
-    ],
+    "extends": ["@fission-codes"],
     "env": {
       "mocha": true
     },
-    "ignorePatterns": [
-      "dist"
-    ],
+    "ignorePatterns": ["dist"],
     "rules": {
       "@typescript-eslint/no-unused-vars": [
         "error",
@@ -153,18 +126,11 @@
           "varsIgnorePattern": "^_"
         }
       ],
-      "unicorn/no-array-reduce": [
-        "off"
-      ]
+      "unicorn/no-array-reduce": ["off"]
     }
   },
   "depcheck": {
-    "specials": [
-      "bin"
-    ],
-    "ignores": [
-      "@types/*",
-      "assert"
-    ]
+    "specials": ["bin"],
+    "ignores": ["@types/*", "assert"]
   }
 }

@@ -22,7 +22,7 @@
 
   "customizations": {
     "codespaces": {
-      "openFiles": ["readme.md"]
+      "openFiles": ["README.md"]
     },
     "vscode": {
       "extensions": [

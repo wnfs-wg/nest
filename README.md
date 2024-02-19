@@ -2,7 +2,7 @@
 
 A layer around the `wnfs` package that provides a `FileSystem` class, a root tree, mounts, transactions and some other essentials.
 
-_More info in the [package readme](https://github.com/wnfs-wg/nest/tree/main/packages/nest/readme.md)._
+_More info in the [package readme](https://github.com/wnfs-wg/nest/tree/main/packages/nest/README.md)._
 
 ## Packages
 
