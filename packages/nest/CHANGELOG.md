@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/wnfs-wg/nest/compare/nest-v0.3.1...nest-v0.3.2) (2024-02-19)
+
+
+### Bug Fixes
+
+* update dependencies ([8b1a796](https://github.com/wnfs-wg/nest/commit/8b1a7965043c684970215cb606d074213ed54af5))
+
 ## [0.3.1](https://github.com/wnfs-wg/nest/compare/nest-v0.3.0...nest-v0.3.1) (2024-02-19)
 
 
