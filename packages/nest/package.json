@@ -106,7 +106,7 @@
     "test:browser": "playwright-test 'test/**/!(*.node).test.ts' --timeout 30000"
   },
   "dependencies": {
-    "@ipld/dag-pb": "^4.0.6",
+    "@ipld/dag-pb": "^4.1.0",
     "compare-versions": "^6.1.0",
     "emittery": "^1.0.1",
     "interface-blockstore": "^5.2.7",

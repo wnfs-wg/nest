@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -70,8 +70,8 @@ importers:
   packages/nest:
     dependencies:
       '@ipld/dag-pb':
-        specifier: ^4.0.6
-        version: 4.0.6
+        specifier: ^4.1.0
+        version: 4.1.0
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -899,11 +899,11 @@ packages:
       multiformats: 12.1.3
     dev: false
 
-  /@ipld/dag-pb@4.0.6:
-    resolution: {integrity: sha512-wOij3jfDKZsb9yjhQeHp+TQy0pu1vmUkGv324xciFFZ7xGbDfAGTQW03lSA5aJ/7HBBNYgjEE0nvHmNW1Qjfag==}
+  /@ipld/dag-pb@4.1.0:
+    resolution: {integrity: sha512-LJU451Drqs5zjFm7jI4Hs3kHlilOqkjcSfPiQgVsZnWaYb2C7YdfhnclrVn/X+ucKejlU9BL3+gXFCZUXkMuCg==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     dependencies:
-      multiformats: 12.1.3
+      multiformats: 13.1.0
     dev: false
 
   /@istanbuljs/schema@0.1.3:
@@ -3345,7 +3345,7 @@ packages:
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     dependencies:
       '@ipld/dag-cbor': 9.0.6
-      '@ipld/dag-pb': 4.0.6
+      '@ipld/dag-pb': 4.1.0
       '@multiformats/murmur3': 2.1.7
       err-code: 3.0.1
       hamt-sharding: 3.0.2
@@ -3367,7 +3367,7 @@ packages:
     resolution: {integrity: sha512-9ArBh7Xfz8gUSe8pq9c9ilBOXd1bbT3L+4xnI6w/usWLwnNT14p8WbFZjDD0MO1/PrD0PTUZuHNDS2l4EO+wPg==}
     engines: {node: '>=16.0.0', npm: '>=7.0.0'}
     dependencies:
-      '@ipld/dag-pb': 4.0.6
+      '@ipld/dag-pb': 4.1.0
       '@multiformats/murmur3': 2.1.7
       err-code: 3.0.1
       hamt-sharding: 3.0.2
@@ -4161,6 +4161,10 @@ packages:
 
   /multiformats@13.0.0:
     resolution: {integrity: sha512-xiIB0p7EKmETm3wyKedOg/xuyQ18PoWwXCzzgpZAiDxL9ktl3XTh8AqoDT5kAqRg+DU48XAGPsUJL2Rn6Bx3Lw==}
+
+  /multiformats@13.1.0:
+    resolution: {integrity: sha512-HzdtdBwxsIkzpeXzhQ5mAhhuxcHbjEHH+JQoxt7hG/2HGFjjwyolLo7hbaexcnhoEuV4e0TNJ8kkpMjiEYY4VQ==}
+    dev: false
 
   /multimatch@5.0.0:
     resolution: {integrity: sha512-ypMKuglUrZUD99Tk2bUQ+xNQj43lPEfAeX2o9cTteAmShXy2VHDJpuwu1o0xqoKCt9jLVAvwyFKdLTPXKAfJyA==}
