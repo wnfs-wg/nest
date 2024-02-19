@@ -773,16 +773,17 @@ export class FileSystem {
                 Store.wnfs(this.#blockstore),
                 this.#rng
               )
-          : await (priv.remainder.length === 0
-              ? Promise.resolve(priv.node)
-              : priv.node
-                  .asDir()
-                  .getNode(
-                    priv.remainder,
-                    searchLatest(),
-                    this.#rootTree.privateForest(),
-                    Store.wnfs(this.#blockstore)
-                  )
+          : await (
+              priv.remainder.length === 0
+                ? Promise.resolve(priv.node)
+                : priv.node
+                    .asDir()
+                    .getNode(
+                      priv.remainder,
+                      searchLatest(),
+                      this.#rootTree.privateForest(),
+                      Store.wnfs(this.#blockstore)
+                    )
             )
               .then((node) => {
                 if (node === null || node === undefined)

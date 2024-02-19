@@ -10,20 +10,20 @@
   "main": "src/main.jsx",
   "scripts": {
     "lint": "tsc --build && eslint . && prettier --check '**/*.{js,jsx,ts,tsx,yml,json,css}' --ignore-path ../../.gitignore",
-    "build": "vite build --force",
+    "build": "vite build",
     "dev": "vite --force",
     "serve": "vite preview --port 3000"
   },
   "dependencies": {
     "@wnfs-wg/nest": "*",
-    "blockstore-idb": "^1.1.7",
-    "uint8arrays": "^5.0.1"
+    "blockstore-idb": "^1.1.8",
+    "uint8arrays": "^5.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.6",
-    "@types/node": "^20.10.7",
+    "@babel/core": "^7.23.9",
+    "@types/node": "^20.11.19",
     "typescript": "5.3.3",
-    "vite": "^5.0.11",
+    "vite": "^5.1.3",
     "vite-plugin-wasm": "^3.3.0"
   },
   "eslintConfig": {
