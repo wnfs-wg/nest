@@ -2,7 +2,7 @@
   "extends": "@fission-codes/eslint-config/tsconfig.json",
   "typedocOptions": {
     "entryPointStrategy": "packages",
-    "entryPoints": ["packages/nest"],
+    "entryPoints": ["packages/*"],
     "darkHighlightTheme": "github-dark",
     "sourceLinkExternal": true,
     "navigationLinks": {
