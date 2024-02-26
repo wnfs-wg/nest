@@ -123,7 +123,7 @@
     "@types/assert": "^1.5.10",
     "@types/debounce-promise": "^3.1.9",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.19",
+    "@types/node": "^20.11.20",
     "assert": "^2.1.0",
     "blockstore-core": "^4.4.0",
     "fast-check": "^3.15.1",
