@@ -62,42 +62,19 @@
   },
   "typesVersions": {
     "*": {
-      ".": [
-        "dist/src/index"
-      ],
-      "app-info": [
-        "dist/src/app-info"
-      ],
-      "class": [
-        "dist/src/class"
-      ],
-      "crypto": [
-        "dist/src/crypto"
-      ],
-      "errors": [
-        "dist/src/errors"
-      ],
-      "events": [
-        "dist/src/events"
-      ],
-      "path": [
-        "dist/src/path"
-      ],
-      "transaction": [
-        "dist/src/transaction"
-      ],
-      "types": [
-        "dist/src/types"
-      ],
-      "version": [
-        "dist/src/version"
-      ]
+      ".": ["dist/src/index"],
+      "app-info": ["dist/src/app-info"],
+      "class": ["dist/src/class"],
+      "crypto": ["dist/src/crypto"],
+      "errors": ["dist/src/errors"],
+      "events": ["dist/src/events"],
+      "path": ["dist/src/path"],
+      "transaction": ["dist/src/transaction"],
+      "types": ["dist/src/types"],
+      "version": ["dist/src/version"]
     }
   },
-  "files": [
-    "dist",
-    "src"
-  ],
+  "files": ["dist", "src"],
   "scripts": {
     "lint": "tsc --build && eslint . --quiet --ignore-pattern='README.md' && prettier --check '**/*.{js,ts,yml,json}' --ignore-path ../../.gitignore",
     "build": "tsc --build",
@@ -117,7 +94,7 @@
     "multiformats": "^13.1.0",
     "p-debounce": "^4.0.0",
     "uint8arrays": "^5.0.2",
-    "wnfs": "0.2.0"
+    "wnfs": "0.2.2"
   },
   "devDependencies": {
     "@types/assert": "^1.5.10",
@@ -135,15 +112,11 @@
     "provenance": true
   },
   "eslintConfig": {
-    "extends": [
-      "@fission-codes"
-    ],
+    "extends": ["@fission-codes"],
     "env": {
       "mocha": true
     },
-    "ignorePatterns": [
-      "dist"
-    ],
+    "ignorePatterns": ["dist"],
     "rules": {
       "@typescript-eslint/no-unused-vars": [
         "error",
@@ -153,18 +126,11 @@
           "varsIgnorePattern": "^_"
         }
       ],
-      "unicorn/no-array-reduce": [
-        "off"
-      ]
+      "unicorn/no-array-reduce": ["off"]
     }
   },
   "depcheck": {
-    "specials": [
-      "bin"
-    ],
-    "ignores": [
-      "@types/*",
-      "assert"
-    ]
+    "specials": ["bin"],
+    "ignores": ["@types/*", "assert"]
   }
 }
