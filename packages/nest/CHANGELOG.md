@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/wnfs-wg/nest/compare/nest-v0.3.3...nest-v0.4.0) (2024-03-08)
+
+
+### Features
+
+* Add size method ([a8f6910](https://github.com/wnfs-wg/nest/commit/a8f6910d08bfc2349e767fc6e368227c0d9ec849))
+
 ## [0.3.3](https://github.com/wnfs-wg/nest/compare/nest-v0.3.2...nest-v0.3.3) (2024-03-08)
 
 
