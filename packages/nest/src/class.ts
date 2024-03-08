@@ -426,6 +426,11 @@ export class FileSystem {
     )
   }
 
+  /** @group Querying */
+  async size(path: Path.File<PartitionedNonEmpty<Partition>>): Promise<number> {
+    return await this.#transactionContext().size(path)
+  }
+
   // MUTATIONS
   // ---------
 

@@ -307,6 +307,14 @@ export class TransactionContext {
     return dataFromBytes(dataType, bytes)
   }
 
+  /** @group Querying */
+  async size(path: Path.File<PartitionedNonEmpty<Partition>>): Promise<number> {
+    return await this.#query(path, {
+      public: Queries.publicSize(),
+      private: Queries.privateSize(),
+    })
+  }
+
   // MUTATIONS
 
   /** @group Mutating */

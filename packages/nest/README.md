@@ -38,25 +38,18 @@ const blockstore = new IDBBlockstore('path/to/store')
 await blockstore.open()
 
 const fs = await FileSystem.create({
-  blockstore
+  blockstore,
 })
 
 // Create the private node of which we'll keep the encryption key around.
 const { capsuleKey } = await fs.mountPrivateNode({
-  path: Path.root() // ie. root private directory
+  path: Path.root(), // ie. root private directory
 })
 
 // Write & Read
-await fs.write(
-  Path.file('private', 'file'),
-  'utf8',
-  '🪺'
-)
+await fs.write(Path.file('private', 'file'), 'utf8', '🪺')
 
-const contents = await fs.read(
-  Path.file('private', 'file'),
-  'utf8'
-)
+const contents = await fs.read(Path.file('private', 'file'), 'utf8')
 ```
 
 Scenario 2:<br />
@@ -73,11 +66,7 @@ of our root tree, the pointer to our file system.
 let fsPointer: CID = await fs.calculateDataRoot()
 
 // When we make a modification to the file system a verification is performed.
-await fs.write(
-  Path.file('private', 'file'),
-  'utf8',
-  '🪺'
-)
+await fs.write(Path.file('private', 'file'), 'utf8', '🪺')
 
 // If the commit is approved, the changes are reflected in the file system and
 // the `commit` and `publish` events are emitted.
@@ -103,7 +92,7 @@ const fs = await FileSystem.fromCID(fsPointer, { blockstore })
 // `capsuleKey` from scenario 1
 await fs.mountPrivateNode({
   path: Path.root(),
-  capsuleKey
+  capsuleKey,
 })
 ```
 
@@ -115,6 +104,7 @@ await fs.mountPrivateNode({
 fs.exists
 fs.listDirectory // alias: fs.ls
 fs.read
+fs.size
 ```
 
 ### Mutations
@@ -153,12 +143,16 @@ import { Modification } from '@wnfs-wg/nest'
 
 const fs = FileSystem.create({
   blockstore,
-  onCommit: (modifications: Modification[]): { commit: boolean } => {
+  onCommit: async (
+    modifications: Modification[]
+  ): Promise<{ commit: boolean }> => {
     // For example, check if I have access to all paths.
-    const satisfied = modifications.every(m => ALLOWED_PATHS.includes( Path.toPosix(m.path) ))
+    const satisfied = modifications.every((m) =>
+      ALLOWED_PATHS.includes(Path.toPosix(m.path))
+    )
     if (satisfied) return { commit: true }
     else return { commit: false }
-  }
+  },
 })
 ```
 

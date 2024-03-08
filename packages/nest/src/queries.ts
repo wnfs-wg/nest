@@ -136,6 +136,24 @@ export const publicReadFromCID = (
   }
 }
 
+export const publicSize = () => {
+  return async (params: PublicParams): Promise<number> => {
+    const wnfsBlockStore = Store.wnfs(params.blockstore)
+
+    const node: PublicNode | null | undefined = await params.rootTree
+      .publicRoot()
+      .getNode(params.pathSegments, wnfsBlockStore)
+
+    if (node === null || node === undefined) {
+      throw new Error('Failed to find public node')
+    } else if (node.isDir()) {
+      throw new Error('Expected node to be a file')
+    }
+
+    return await node.asFile().getSize(wnfsBlockStore)
+  }
+}
+
 // PRIVATE
 
 export type PrivateParams = {
@@ -319,5 +337,40 @@ export const privateReadFromAccessKey = (
     } else {
       throw new Error('Expected a file, found a directory')
     }
+  }
+}
+
+export const privateSize = () => {
+  return async (params: PrivateParams): Promise<number> => {
+    let node
+
+    if (params.node.isDir()) {
+      if (params.remainder.length === 0) {
+        throw new Error('Expected node to be a file')
+      }
+
+      const tmpNode: PrivateNode | null | undefined = await params.node
+        .asDir()
+        .getNode(
+          params.remainder,
+          searchLatest(),
+          params.rootTree.privateForest(),
+          Store.wnfs(params.blockstore)
+        )
+
+      if (tmpNode === null || tmpNode === undefined) {
+        throw new Error('Failed to find private node')
+      } else if (tmpNode.isDir()) {
+        throw new Error('Expected node to be a file')
+      }
+
+      node = tmpNode
+    } else {
+      node = params.node
+    }
+
+    return await node
+      .asFile()
+      .getSize(params.rootTree.privateForest(), Store.wnfs(params.blockstore))
   }
 }

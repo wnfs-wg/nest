@@ -557,6 +557,27 @@ describe('File System Class', () => {
     )
   })
 
+  // SIZE
+  // ----
+
+  it('returns the size of public files', async () => {
+    const path = Path.file('public', 'file')
+
+    await fs.write(path, 'bytes', new Uint8Array([1, 2, 3]))
+    const size = await fs.size(path)
+
+    assert.equal(size, 3)
+  })
+
+  it('returns the size of private files', async () => {
+    const path = Path.file('private', 'file')
+
+    await fs.write(path, 'bytes', new Uint8Array([1, 2, 3, 4]))
+    const size = await fs.size(path)
+
+    assert.equal(size, 4)
+  })
+
   // REMOVE
   // ------
 
