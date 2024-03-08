@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/wnfs-wg/nest/compare/nest-v0.3.2...nest-v0.3.3) (2024-03-08)
+
+
+### Bug Fixes
+
+* Run formatter ([4567955](https://github.com/wnfs-wg/nest/commit/4567955008adc1b64e94c58cbfd1615403732dbf))
+
 ## [0.3.2](https://github.com/wnfs-wg/nest/compare/nest-v0.3.1...nest-v0.3.2) (2024-02-19)
 
 
