@@ -1,0 +1,41 @@
+{
+  "name": "demo",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "author": "Steven Vandevelde <icid.asset@gmail.com> (tokono.ma)",
+  "license": "MIT",
+  "keywords": [],
+  "main": "src/main.jsx",
+  "scripts": {
+    "lint": "tsc --build && eslint . && prettier --check '**/*.{js,jsx,ts,tsx,yml,json,css}' --ignore-path ../../.gitignore",
+    "dev": "rsbuild dev --open",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview"
+  },
+  "dependencies": {
+    "@wnfs-wg/nest": "*",
+    "blockstore-core": "^4.4.0",
+    "blockstore-idb": "^1.1.8",
+    "idb-keyval": "^6.2.1",
+    "interface-blockstore": "^5.2.10",
+    "mediainfo.js": "^0.2.1",
+    "mime": "^4.0.1",
+    "multiformats": "^13.1.0",
+    "uint8arrays": "^5.0.2"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^0.4.4",
+    "@types/node": "^20.11.0",
+    "typescript": "5.3.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@fission-codes"
+    ],
+    "ignorePatterns": [
+      "dist"
+    ]
+  }
+}
