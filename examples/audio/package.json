@@ -22,20 +22,15 @@
     "interface-blockstore": "^5.2.10",
     "mediainfo.js": "^0.2.1",
     "mime": "^4.0.1",
-    "multiformats": "^13.1.0",
     "uint8arrays": "^5.0.2"
   },
   "devDependencies": {
     "@rsbuild/core": "^0.4.4",
     "@types/node": "^20.11.0",
-    "typescript": "5.3.3"
+    "typescript": "5.4.2"
   },
   "eslintConfig": {
-    "extends": [
-      "@fission-codes"
-    ],
-    "ignorePatterns": [
-      "dist"
-    ]
+    "extends": ["@fission-codes"],
+    "ignorePatterns": ["dist"]
   }
 }
