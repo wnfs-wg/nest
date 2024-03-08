@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -103,8 +103,8 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2
       wnfs:
-        specifier: 0.2.0
-        version: 0.2.0
+        specifier: 0.2.2
+        version: 0.2.2
     devDependencies:
       '@types/assert':
         specifier: ^1.5.10
@@ -5691,8 +5691,8 @@ packages:
       isexe: 2.0.0
     dev: true
 
-  /wnfs@0.2.0:
-    resolution: {integrity: sha512-K2uXtk8JyHRSLC0wwe+WfHDxDWnwyc5obmCZlMLbkuqG+Bu1OxsdQeL5tzd90kDjRl7YbdWMANR/I0IS1pgqAQ==}
+  /wnfs@0.2.2:
+    resolution: {integrity: sha512-smqSbccaLyShSdCA46zIkmbZa8cmdXYpmwqBJQ8q+mGieyFPRrjaEPwcvYNY1KcTw89tUGhg8KragXyWixALMA==}
     dev: false
 
   /workerpool@6.2.1:
