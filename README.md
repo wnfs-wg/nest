@@ -10,6 +10,7 @@ _More info in the [package readme](https://github.com/wnfs-wg/nest/tree/main/pac
 
 ## Examples
 
+- [`audio`](https://github.com/wnfs-wg/nest/tree/main/examples/audio) - Shows how to play audio from a file system using an `<audio>` element.
 - [`demo`](https://github.com/wnfs-wg/nest/tree/main/examples/demo) - A simple demo of how the `nest` package is used.
 
 ### Checkout examples
