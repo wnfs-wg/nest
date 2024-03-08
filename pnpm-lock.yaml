@@ -62,9 +62,6 @@ importers:
       mime:
         specifier: ^4.0.1
         version: 4.0.1
-      multiformats:
-        specifier: ^13.1.0
-        version: 13.1.0
       uint8arrays:
         specifier: ^5.0.2
         version: 5.0.2
@@ -76,8 +73,8 @@ importers:
         specifier: ^20.11.0
         version: 20.11.25
       typescript:
-        specifier: 5.3.3
-        version: 5.3.3
+        specifier: 5.4.2
+        version: 5.4.2
 
   examples/demo:
     dependencies:
@@ -5726,6 +5723,12 @@ packages:
 
   /typescript@5.3.3:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true
+
+  /typescript@5.4.2:
+    resolution: {integrity: sha512-+2/g0Fds1ERlP6JsakQQDXjZdZMM+rqpamFZJEKh4kwTIn3iDkgKtby0CeNd5ATNZ4Ry1ax15TMx0W2V+miizQ==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
