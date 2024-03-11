@@ -103,7 +103,6 @@ async function init(fileName: string, fileData: ArrayBuffer) {
   // Buffering
   const bufferSize = 512 * 1024 // 512 KB
   const metadataSize = mediainfo?.media?.track[0]?.StreamSize || 0
-  const amountOfFramesToLoad = bufferSize / audioFrameSize
 
   let loading = false
   let seeking = false
