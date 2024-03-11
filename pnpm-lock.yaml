@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -67,8 +67,8 @@ importers:
         version: 5.0.2
     devDependencies:
       '@rsbuild/core':
-        specifier: ^0.4.4
-        version: 0.4.12
+        specifier: ^0.4.13
+        version: 0.4.13
       '@types/node':
         specifier: ^20.11.0
         version: 20.11.25
@@ -1197,23 +1197,21 @@ packages:
     dev: true
     optional: true
 
-  /@rsbuild/core@0.4.12:
-    resolution: {integrity: sha512-OIRHXEAugbEtnw22tdos6Hiep2i8CIa1DdHU1HVVIf+WeTbVvWplW2JcsPgjbY31S3z0tg6xn3QaVT8uTzrz5w==}
+  /@rsbuild/core@0.4.13:
+    resolution: {integrity: sha512-8iqA+enprHDkRYfdNWed5gcU3LuDhvi90igifoeu+BUvOHgy8BZfDufQLaddkt4UpeeSRzLSe9GTeU4EOEgjqw==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
-      '@rsbuild/shared': 0.4.12(@swc/helpers@0.5.3)
+      '@rsbuild/shared': 0.4.13(@swc/helpers@0.5.3)
       '@rspack/core': 0.5.6(@swc/helpers@0.5.3)
       '@swc/helpers': 0.5.3
       core-js: 3.32.2
-      html-webpack-plugin: /html-rspack-plugin@5.6.1(@rspack/core@0.5.6)
+      html-webpack-plugin: /html-rspack-plugin@5.6.2(@rspack/core@0.5.6)
       postcss: 8.4.35
-    transitivePeerDependencies:
-      - webpack
     dev: true
 
-  /@rsbuild/shared@0.4.12(@swc/helpers@0.5.3):
-    resolution: {integrity: sha512-2lPbqcLNjUoHfdQCB6XdoqCqiLwpVeXcydv8cvTeiNCGseLY1WWTSn14b/L6Aj72TJbWWCqAAsm7YVL7Oibqvg==}
+  /@rsbuild/shared@0.4.13(@swc/helpers@0.5.3):
+    resolution: {integrity: sha512-ZaCBlgmDY9Tp8aQlRp0Bh5XpHhDHzJjdm2p82n9YkVVvZbPHLhQ9VLdTNxLY5l2R9uYZ9KjJ3h8L5PZlds7oNQ==}
     dependencies:
       '@rspack/core': 0.5.6(@swc/helpers@0.5.3)
       caniuse-lite: 1.0.30001596
@@ -1959,7 +1957,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001570
+      caniuse-lite: 1.0.30001596
       electron-to-chromium: 1.4.614
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.22.2)
@@ -2030,10 +2028,6 @@ packages:
   /camelcase@8.0.0:
     resolution: {integrity: sha512-8WB3Jcas3swSvjIeA2yvCJ+Miyz5l1ZmB6HFb9R1317dt9LCQoswg/BGrmAmkWVEszSrrg4RwmO46qIm2OEnSA==}
     engines: {node: '>=16'}
-    dev: true
-
-  /caniuse-lite@1.0.30001570:
-    resolution: {integrity: sha512-+3e0ASu4sw1SWaoCtvPeyXp+5PsjigkSt8OXZbF9StH5pQWbxEjLAZE3n8Aup5udop1uRiKA7a4utUk/uoSpUw==}
     dev: true
 
   /caniuse-lite@1.0.30001596:
@@ -3491,16 +3485,13 @@ packages:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
     dev: true
 
-  /html-rspack-plugin@5.6.1(@rspack/core@0.5.6):
-    resolution: {integrity: sha512-HxBMh931QBxzUAA12j4iPIK1yVgnQrz3ziU/CHU7hUWuolpCy+wcUgcn9Zy4YPsq8PisE9lSg2K8+3i0a//H8A==}
+  /html-rspack-plugin@5.6.2(@rspack/core@0.5.6):
+    resolution: {integrity: sha512-cPGwV3odvKJ7DBAG/DxF5e0nMMvBl1zGfyDciT2xMETRrIwajwC7LtEB3cf7auoGMK6xJOOLjWJgaKHLu/FzkQ==}
     engines: {node: '>=10.13.0'}
     peerDependencies:
       '@rspack/core': 0.x || 1.x
-      webpack: ^5.20.0
     peerDependenciesMeta:
       '@rspack/core':
-        optional: true
-      webpack:
         optional: true
     dependencies:
       '@rspack/core': 0.5.6(@swc/helpers@0.5.3)
