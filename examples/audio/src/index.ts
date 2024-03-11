@@ -3,16 +3,18 @@ import { Path } from '@wnfs-wg/nest'
 import * as FS from './fs.ts'
 import mime from 'mime'
 
-// FS
-// --
+////////
+// 🗄️ //
+////////
 
 const blockstore = new IDBBlockstore('blockstore')
 await blockstore.open()
 
 const fs = await FS.load({ blockstore })
 
-// STATE NODE
-// ----------
+////////
+// 📣 //
+////////
 
 const state = document.querySelector('#state')
 if (!state) throw new Error('Expected a #state element to exist')
@@ -21,8 +23,9 @@ function note(msg: string) {
   if (state) state.innerHTML = msg
 }
 
-// FILE INPUT
-// ----------
+////////
+// 💁 //
+////////
 
 const fi: HTMLInputElement | null = document.querySelector('#file-input')
 
@@ -38,13 +41,17 @@ if (fi)
 
     reader.onload = (event: any) => {
       const data: ArrayBuffer = event.target.result
-      init(file.name, data)
+      createAudio(file.name, data)
     }
 
     reader.readAsArrayBuffer(file)
   })
 
-async function init(fileName: string, fileData: ArrayBuffer) {
+////////
+// 🎵 //
+////////
+
+async function createAudio(fileName: string, fileData: ArrayBuffer) {
   const mimeType = mime.getType(fileName)
   if (!mimeType || !mimeType.startsWith('audio/'))
     throw new Error('Not an audio file')
@@ -121,12 +128,8 @@ async function init(fileName: string, fileData: ArrayBuffer) {
       loading
     )
       return
-    loading = true
 
-    // const buffered = {
-    //   from: sourceBuffer.buffered.length ? sourceBuffer.buffered.start(0) : 0,
-    //   to: sourceBuffer.buffered.length ? sourceBuffer.buffered.end(0) : 0,
-    // }
+    loading = true
 
     let start = buffered.end
     let end = start + bufferSize
@@ -172,10 +175,6 @@ async function init(fileName: string, fileData: ArrayBuffer) {
     sourceBuffer = src.addSourceBuffer(mimeType)
     sourceBuffer.mode = 'sequence'
 
-    // sourceBuffer.addEventListener('updateend', () => {
-    //   console.log('updateend')
-    // })
-
     // Load initial frames
     loadNext()
   })
@@ -184,49 +183,59 @@ async function init(fileName: string, fileData: ArrayBuffer) {
   const audio = new Audio()
   audio.src = URL.createObjectURL(src)
   audio.controls = true
-  audio.volume = 0.1
+  audio.volume = 0.5
 
   audio.addEventListener('seeking', () => {
     if (seeking) return
     seeking = true
 
-    if (src.readyState === 'open') {
-      // Abort current segment append
-      sourceBuffer.abort()
-    }
-
     const time = audio.currentTime
-
-    sourceBuffer.remove(0, Infinity)
-    sourceBuffer.addEventListener(
-      'updateend',
-      async (): Promise<void> => {
-        sourceBuffer.timestampOffset = time
-
-        const frame = Math.floor((time / audio.duration) * audioFrameCount)
-
-        const buffer = await fs.read(path, 'bytes', {
-          offset: metadataSize + frame * audioFrameSize,
-          length: bufferSize,
-        })
-
-        const headerStart = getHeaderStart(buffer)
-        console.log('Header start', headerStart)
-
-        buffered.start = metadataSize + frame * audioFrameSize + headerStart
-        buffered.end = buffered.start
-
-        seeking = false
-        loadNext()
-      },
-      { once: true }
+    console.log(
+      `Seeking to ${Math.round((time / audio.duration) * 100)}%`,
+      time
     )
 
-    console.log(`Seeking to ${Math.round((time / audio.duration) * 100)}%`)
+    function abortAndRemove() {
+      if (src.readyState === 'open') sourceBuffer.abort()
+      sourceBuffer.addEventListener('updateend', nextUp, { once: true })
+      sourceBuffer.remove(0, Infinity)
+    }
+
+    // `loadNext` is reading from WNFS, wait until it is finished.
+    // TODO: Find a better way to manage this, ideally we should be
+    //       able to cancel this so that the resulting
+    //       `sourceBuffer.appendBuffer` call never happens.
+    if (loading) {
+      sourceBuffer.addEventListener('updateend', () => abortAndRemove(), {
+        once: true,
+      })
+    } else {
+      abortAndRemove()
+    }
+
+    async function nextUp() {
+      sourceBuffer.timestampOffset = time
+
+      const frame = Math.floor((time / audio.duration) * audioFrameCount)
+
+      const buffer = await fs.read(path, 'bytes', {
+        offset: metadataSize + frame * audioFrameSize,
+        length: bufferSize,
+      })
+
+      const headerStart = getHeaderStart(buffer)
+      console.log('Header start', headerStart)
+
+      buffered.start = metadataSize + frame * audioFrameSize + headerStart
+      buffered.end = buffered.start
+
+      seeking = false
+      loadNext()
+    }
   })
 
   audio.addEventListener('timeupdate', () => {
-    if (seeking) return
+    if (audio.seeking) return
     if (audio.currentTime + 60 > sourceBuffer.timestampOffset) loadNext()
   })
 
@@ -238,8 +247,9 @@ async function init(fileName: string, fileData: ArrayBuffer) {
   document.body.appendChild(audio)
 }
 
-// AUDIO
-// -----
+////////
+// 🛠️ //
+////////
 
 async function mediaInfoClient(covers: boolean) {
   const MediaInfoFactory = await import('mediainfo.js').then((a) => a.default)
@@ -268,6 +278,33 @@ function getHeaderStart(buffer: Uint8Array) {
       buffer[i + 2] === SyncByte3 &&
       buffer[i + 3] === SyncByte4
     ) {
+      return i
+    }
+  }
+
+  for (let i = 0; i + 1 < buffer.length; i++) {
+    if (
+      buffer[i] === SyncByte1 &&
+      buffer[i + 1] === SyncByte2 &&
+      buffer[i + 2] === 224 &&
+      buffer[i + 3] === 64
+    ) {
+      return i
+    }
+  }
+
+  for (let i = 0; i + 1 < buffer.length; i++) {
+    if (
+      buffer[i] === SyncByte1 &&
+      buffer[i + 1] === SyncByte2 &&
+      buffer[i + 2] === SyncByte3
+    ) {
+      return i
+    }
+  }
+
+  for (let i = 0; i + 1 < buffer.length; i++) {
+    if (buffer[i] === SyncByte1 && buffer[i + 1] === SyncByte2) {
       return i
     }
   }
