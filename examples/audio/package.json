@@ -10,7 +10,7 @@
   "main": "src/main.jsx",
   "scripts": {
     "lint": "tsc --build && eslint . && prettier --check '**/*.{js,jsx,ts,tsx,yml,json,css}' --ignore-path ../../.gitignore",
-    "dev": "rsbuild dev --open",
+    "dev": "rsbuild dev",
     "build": "rsbuild build",
     "preview": "rsbuild preview"
   },
