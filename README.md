@@ -12,6 +12,7 @@ _More info in the [package readme](https://github.com/wnfs-wg/nest/tree/main/pac
 
 - [`audio`](https://github.com/wnfs-wg/nest/tree/main/examples/audio) - Shows how to play audio from a file system using an `<audio>` element.
 - [`demo`](https://github.com/wnfs-wg/nest/tree/main/examples/demo) - A simple demo of how the `nest` package is used.
+- [`web3storage`](https://github.com/wnfs-wg/nest/tree/main/examples/web3storage) - An example app that shows how to store a WNFS on Web3Storage using the `nest` package.
 
 ### Checkout examples
 
