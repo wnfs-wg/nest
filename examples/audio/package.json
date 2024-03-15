@@ -10,27 +10,34 @@
   "main": "src/main.jsx",
   "scripts": {
     "lint": "tsc --build && eslint . && prettier --check '**/*.{js,jsx,ts,tsx,yml,json,css}' --ignore-path ../../.gitignore",
-    "dev": "rsbuild dev",
-    "build": "rsbuild build",
-    "preview": "rsbuild preview"
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@wnfs-wg/nest": "*",
     "blockstore-core": "^4.4.0",
     "blockstore-idb": "^1.1.8",
+    "codec-parser": "^2.4.3",
     "idb-keyval": "^6.2.1",
     "interface-blockstore": "^5.2.10",
     "mediainfo.js": "^0.2.1",
-    "mime": "^4.0.1",
-    "uint8arrays": "^5.0.2"
+    "mpg123-decoder": "^1.0.0",
+    "mse-audio-wrapper": "^1.4.14",
+    "uint8arrays": "^5.0.3"
   },
   "devDependencies": {
-    "@rsbuild/core": "^0.4.4",
+    "@rsbuild/core": "^0.4.15",
     "@types/node": "^20.11.0",
-    "typescript": "5.4.2"
+    "typescript": "5.4.2",
+    "vite": "^5.1.4",
+    "vite-plugin-wasm": "^3.3.0"
   },
   "eslintConfig": {
     "extends": ["@fission-codes"],
-    "ignorePatterns": ["dist"]
+    "ignorePatterns": ["dist"],
+    "rules": {
+      "no-console": ["off", "always"]
+    }
   }
 }

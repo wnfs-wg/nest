@@ -1,71 +1,68 @@
+import type { CodecHeader, MimeType } from 'codec-parser'
+import type { MediaInfo, MediaInfoType } from 'mediainfo.js'
+import type { MPEGDecodedAudio } from 'mpg123-decoder'
+
+import * as Uint8Arr from 'uint8arrays'
 import { IDBBlockstore } from 'blockstore-idb'
 import { Path } from '@wnfs-wg/nest'
-import * as FS from './fs.ts'
-import mime from 'mime'
+import CodecParser from 'codec-parser'
 
-////////
-// 🗄️ //
-////////
+// @ts-expect-error No type defs
+import MSEAudioWrapper from 'mse-audio-wrapper'
+
+import * as FS from './fs.js'
+
+// 🗄️
 
 const blockstore = new IDBBlockstore('blockstore')
 await blockstore.open()
 
 const fs = await FS.load({ blockstore })
 
-////////
-// 📣 //
-////////
+// 📣
 
 const state = document.querySelector('#state')
-if (!state) throw new Error('Expected a #state element to exist')
+if (state === null) throw new Error('Expected a #state element to exist')
 
-function note(msg: string) {
-  if (state) state.innerHTML = msg
+function note(msg: string): void {
+  if (state !== null) state.innerHTML = msg
 }
 
-////////
-// 💁 //
-////////
+// 💁
 
 const fi: HTMLInputElement | null = document.querySelector('#file-input')
 
-if (fi)
+if (fi !== null)
   fi.addEventListener('change', (event: Event) => {
     if (fi?.files?.length !== 1) return
     const file: File = fi.files[0]
 
-    const reader = new FileReader()
-
     note('Reading file')
     console.log('File selected', file)
 
-    reader.onload = (event: any) => {
-      const data: ArrayBuffer = event.target.result
-      createAudio(file.name, data)
-    }
-
-    reader.readAsArrayBuffer(file)
+    file
+      .arrayBuffer()
+      .then(async (data) => {
+        await createAudio(file.name, file.type, data)
+      })
+      .catch(console.error)
   })
 
-////////
-// 🎵 //
-////////
+// 🎵
 
-async function createAudio(fileName: string, fileData: ArrayBuffer) {
-  const mimeType = mime.getType(fileName)
-  if (!mimeType || !mimeType.startsWith('audio/'))
-    throw new Error('Not an audio file')
-
-  console.log('Audio mimetype', mimeType)
-
+async function createAudio(
+  fileName: string,
+  mimeType: string,
+  fileData: ArrayBuffer
+): Promise<void> {
   // File
   note('Adding file to WNFS')
 
   const path = Path.file('private', fileName)
 
-  if ((await fs.exists(path)) === false) {
+  if (!(await fs.exists(path))) {
     const { dataRoot } = await fs.write(path, 'bytes', new Uint8Array(fileData))
-    FS.savePointer(dataRoot)
+    await FS.savePointer(dataRoot)
   }
 
   const fileSize = await fs.size(path)
@@ -75,52 +72,138 @@ async function createAudio(fileName: string, fileData: ArrayBuffer) {
   // Audio metadata
   note('Looking up audio metadata')
 
-  const mediainfo = await (
-    await mediaInfoClient(true)
-  ).analyzeData(
+  const mediaClient = await mediaInfoClient(true)
+  const mediainfo = await mediaClient.analyzeData(
     async (): Promise<number> => {
       return fileSize
     },
     async (chunkSize: number, offset: number): Promise<Uint8Array> => {
       if (chunkSize === 0) return new Uint8Array()
-      return fs.read(path, 'bytes', { offset, length: chunkSize })
+      return await fs.read(path, 'bytes', { offset, length: chunkSize })
     }
   )
 
   // Audio duration
   const audioDuration = mediainfo?.media?.track[0]?.Duration
-  if (!audioDuration) throw new Error('Failed to determine audio duration')
+  if (audioDuration === undefined)
+    throw new Error('Failed to determine audio duration')
 
   console.log('Audio duration', audioDuration)
-  console.log('Audio metadata', mediainfo.media.track)
+  console.log('Audio metadata', mediainfo.media?.track)
 
   // Audio frames
-  if (!mediainfo.media.track[1]?.FrameCount)
+  if (mediainfo.media?.track[1]?.FrameCount === undefined)
     throw new Error('Failed to determine audio frame count')
-  if (!mediainfo.media.track[1]?.StreamSize)
+  if (mediainfo.media?.track[1]?.StreamSize === undefined)
     throw new Error('Failed to determine audio stream size')
   const audioFrameCount = mediainfo.media.track[1]?.FrameCount
   const audioStreamSize = mediainfo.media.track[1]?.StreamSize
   const audioFrameSize = Math.ceil(audioStreamSize / audioFrameCount)
+  const metadataSize = mediainfo?.media?.track[0]?.StreamSize ?? 0
 
   console.log('Audio frame count', audioFrameCount)
   console.log('Audio stream size', audioStreamSize)
   console.log('Audio frame size', audioFrameSize)
 
+  // Try to create media source first
+  let supportsMediaSource = false
+
+  // try {
+  //   const { supported } = createMediaSource({
+  //     audioDuration,
+  //     audioFrameCount,
+  //     audioFrameSize,
+  //     fileSize,
+  //     path,
+  //     metadataSize,
+  //     mimeType,
+  //   })
+
+  //   supportsMediaSource = supported
+  // } catch (error) {
+  //   console.error('Failed to create media source', error)
+  // }
+
+  // If that failed, decode the audio via wasm
+  if (supportsMediaSource) return
+
+  const { supported } = await createWebAudio({
+    audioDuration,
+    audioFrameCount,
+    audioFrameSize,
+    fileSize,
+    mediainfo,
+    path,
+    metadataSize,
+    mimeType,
+  })
+
+  if (!supported)
+    throw new Error('Did not implement a decoder for this type of audio yet')
+}
+
+// 🛠️
+
+async function mediaInfoClient(covers: boolean): Promise<MediaInfo> {
+  const MediaInfoFactory = await import('mediainfo.js').then((a) => a.default)
+
+  return await MediaInfoFactory({
+    coverData: covers,
+    full: true,
+    locateFile: () => {
+      return new URL('mediainfo.js/MediaInfoModule.wasm', import.meta.url)
+        .pathname
+    },
+  })
+}
+
+// MEDIA STREAM
+//
+// Let the browser decode the audio.
+
+function createMediaSource({
+  audioDuration,
+  audioFrameCount,
+  audioFrameSize,
+  fileSize,
+  metadataSize,
+  mimeType,
+  path,
+}: {
+  audioDuration: number
+  audioFrameCount: number
+  audioFrameSize: number
+  fileSize: number
+  metadataSize: number
+  mimeType: string
+  path: Path.File<Path.PartitionedNonEmpty<Path.Private>>
+}): { supported: boolean } {
+  if (window.MediaSource === undefined) {
+    return { supported: false }
+  }
+
+  // Create audio wrapper which enables support for some unsupported audio containers
+  console.log('Audio mimetype', mimeType)
+  const audioWrapper = new MSEAudioWrapper(mimeType)
+
+  // Detect support
+  if (!MediaSource.isTypeSupported(mimeType)) {
+    return { supported: false }
+  }
+
   // Buffering
   const bufferSize = 512 * 1024 // 512 KB
-  const metadataSize = mediainfo?.media?.track[0]?.StreamSize || 0
 
   let loading = false
   let seeking = false
 
   let sourceBuffer: SourceBuffer
-  let buffered: { start: number; end: number } = {
+  const buffered: { start: number; end: number } = {
     start: 0,
     end: 0,
   }
 
-  async function loadNext() {
+  async function loadNext(): Promise<void> {
     if (
       src.readyState !== 'open' ||
       sourceBuffer.updating ||
@@ -131,7 +214,7 @@ async function createAudio(fileName: string, fileData: ArrayBuffer) {
 
     loading = true
 
-    let start = buffered.end
+    const start = buffered.end
     let end = start + bufferSize
     let reachedEnd = false
 
@@ -150,18 +233,24 @@ async function createAudio(fileName: string, fileData: ArrayBuffer) {
       length: end - start,
     })
 
-    sourceBuffer.appendBuffer(buffer)
+    sourceBuffer.appendBuffer(
+      Uint8Arr.concat([...audioWrapper.iterator(buffer)] as Uint8Array[])
+    )
 
     loading = false
 
     if (reachedEnd) {
-      sourceBuffer.addEventListener('updateend', () => src.endOfStream(), {
-        once: true,
-      })
+      sourceBuffer.addEventListener(
+        'updateend',
+        () => {
+          if (!sourceBuffer.updating) src.endOfStream()
+        },
+        {
+          once: true,
+        }
+      )
     }
   }
-
-  globalThis.loadNext = loadNext
 
   // Media source
   note('Setting up media source')
@@ -176,7 +265,7 @@ async function createAudio(fileName: string, fileData: ArrayBuffer) {
     sourceBuffer.mode = 'sequence'
 
     // Load initial frames
-    loadNext()
+    loadNext().catch(console.error)
   })
 
   // Create audio
@@ -195,10 +284,10 @@ async function createAudio(fileName: string, fileData: ArrayBuffer) {
       time
     )
 
-    function abortAndRemove() {
+    function abortAndRemove(): void {
       if (src.readyState === 'open') sourceBuffer.abort()
       sourceBuffer.addEventListener('updateend', nextUp, { once: true })
-      sourceBuffer.remove(0, Infinity)
+      sourceBuffer.remove(0, Number.POSITIVE_INFINITY)
     }
 
     // `loadNext` is reading from WNFS, wait until it is finished.
@@ -206,108 +295,241 @@ async function createAudio(fileName: string, fileData: ArrayBuffer) {
     //       able to cancel this so that the resulting
     //       `sourceBuffer.appendBuffer` call never happens.
     if (loading) {
-      sourceBuffer.addEventListener('updateend', () => abortAndRemove(), {
+      sourceBuffer.addEventListener('updateend', abortAndRemove, {
         once: true,
       })
     } else {
       abortAndRemove()
     }
 
-    async function nextUp() {
+    function nextUp(): void {
+      if (audioDuration !== undefined && !sourceBuffer.updating)
+        src.duration = audioDuration
       sourceBuffer.timestampOffset = time
 
       const frame = Math.floor((time / audio.duration) * audioFrameCount)
 
-      const buffer = await fs.read(path, 'bytes', {
-        offset: metadataSize + frame * audioFrameSize,
-        length: bufferSize,
-      })
-
-      const headerStart = getHeaderStart(buffer)
-      console.log('Header start', headerStart)
-
-      buffered.start = metadataSize + frame * audioFrameSize + headerStart
+      buffered.start = metadataSize + frame * audioFrameSize
       buffered.end = buffered.start
 
       seeking = false
-      loadNext()
+      loadNext().catch(console.error)
     }
   })
 
   audio.addEventListener('timeupdate', () => {
     if (audio.seeking) return
-    if (audio.currentTime + 60 > sourceBuffer.timestampOffset) loadNext()
+    if (audio.currentTime + 60 > sourceBuffer.timestampOffset)
+      loadNext().catch(console.error)
   })
 
   audio.addEventListener('waiting', () => {
     console.log('Audio element is waiting for data')
-    loadNext()
+    loadNext().catch(console.error)
   })
 
-  document.body.appendChild(audio)
+  document.body.append(audio)
+
+  return { supported: true }
 }
 
-////////
-// 🛠️ //
-////////
+// WEB AUDIO
+//
+// Decode the audio via WASM.
+//
+// NOTES:
+// https://github.com/WebAudio/web-audio-api/issues/2227
+//
+// ⚠️ This code assumes the audio bytes will be loaded in before
+//    the current audio segment ends.
 
-async function mediaInfoClient(covers: boolean) {
-  const MediaInfoFactory = await import('mediainfo.js').then((a) => a.default)
+async function createWebAudio({
+  audioDuration,
+  audioFrameCount,
+  audioFrameSize,
+  fileSize,
+  mediainfo,
+  metadataSize,
+  mimeType,
+  path,
+}: {
+  audioDuration: number
+  audioFrameCount: number
+  audioFrameSize: number
+  fileSize: number
+  mediainfo: MediaInfoType
+  metadataSize: number
+  mimeType: string
+  path: Path.File<Path.PartitionedNonEmpty<Path.Private>>
+}): Promise<{ supported: boolean }> {
+  const audioContext = new AudioContext()
 
-  return await MediaInfoFactory({
-    coverData: covers,
-    full: true,
-    locateFile: () => {
-      return new URL('mediainfo.js/MediaInfoModule.wasm', import.meta.url)
-        .pathname
+  // Correct mime type
+  let correctedMimeType: MimeType
+
+  const codec = mediainfo.media?.track
+    .find((a) => a.StreamKind === 'Audio')
+    ?.Format?.toLowerCase()
+
+  switch (codec) {
+    case 'mpeg':
+    case 'mpeg audio': {
+      correctedMimeType = 'audio/mpeg'
+      break
+    }
+    default: {
+      return { supported: false }
+    }
+  }
+
+  // Create codec parser
+  const codecParser = new CodecParser(correctedMimeType, {
+    // @ts-expect-error Faulty type definitions
+    onCodecHeader: (codecHeaderData: CodecHeader) => {
+      console.log(codecHeaderData)
     },
   })
-}
 
-function getHeaderStart(buffer: Uint8Array) {
-  let headerStart = 0
-  const SyncByte1 = 0xff
-  const SyncByte2 = 0xfb
-  const SyncByte3 = 0x90 // 224
-  const SyncByte4 = 0x64 // 64
+  const sampleRate = mediainfo.media?.track.find(
+    (a) => a.StreamKind === 'Audio'
+  )?.SamplingRate
 
-  for (let i = 0; i + 1 < buffer.length; i++) {
-    if (
-      buffer[i] === SyncByte1 &&
-      buffer[i + 1] === SyncByte2 &&
-      buffer[i + 2] === SyncByte3 &&
-      buffer[i + 3] === SyncByte4
-    ) {
-      return i
+  if (sampleRate === undefined)
+    throw new Error('Failed to determine sample rate')
+
+  // Create decoder
+  const { MPEGDecoderWebWorker } = await import('mpg123-decoder')
+  const decoder = new MPEGDecoderWebWorker()
+
+  await decoder.ready
+
+  // Buffering
+  const bufferSize = 512 * 1024
+  const buffered: {
+    start: number
+    end: number
+    reachedEnd: boolean
+    samples: number
+    sampleOffset: number
+    time: number
+  } = {
+    start: 0,
+    end: 0,
+    reachedEnd: false,
+    samples: 0,
+    sampleOffset: 0,
+    time: 0,
+  }
+
+  let loading = false
+
+  async function loadNext(): Promise<MPEGDecodedAudio | undefined> {
+    if (loading) return
+    loading = true
+
+    if (sampleRate === undefined)
+      throw new Error('Failed to determine sample rate')
+
+    const start = buffered.end
+    let end = start + bufferSize
+    let reachedEnd = false
+
+    if (end > fileSize) {
+      end = fileSize
+      reachedEnd = true
+    }
+
+    note(`Loading bytes, offset: ${start} - length: ${end - start}`)
+    console.log(`Loading bytes from ${start} to ${end}`)
+
+    const bytes = await fs.read(path, 'bytes', {
+      offset: start,
+      length: end - start,
+    })
+
+    const frames: Array<{ data: Uint8Array }> = [
+      // @ts-expect-error No type defs
+      ...codecParser.parseChunk(bytes),
+    ]
+
+    const decoded = await decoder.decodeFrames(frames.map((f) => f.data))
+
+    buffered.end = end
+    buffered.reachedEnd = reachedEnd
+    buffered.samples += decoded.samplesDecoded
+    buffered.time = (buffered.samples - buffered.sampleOffset) / sampleRate
+
+    loading = false
+
+    return decoded
+  }
+
+  // Audio
+  const audio = new Audio()
+  audio.controls = true
+  audio.volume = 0.5
+
+  document.body.append(audio)
+
+  // Create media stream and attach it to the audio element
+  const mediaStream = audioContext.createMediaStreamDestination()
+  mediaStream.channelCount = audioContext.destination.maxChannelCount
+  audio.srcObject = mediaStream.stream
+
+  // Create audio buffer
+  const initialDecoded = await loadNext()
+  if (initialDecoded === undefined)
+    throw new Error('Failed to load initial frames')
+
+  const { channelData } = initialDecoded
+  const audioBuffer = audioContext.createBuffer(
+    channelData.length,
+    audioDuration * sampleRate,
+    sampleRate
+  )
+
+  for (const [idx, channel] of channelData.entries()) {
+    audioBuffer.getChannelData(idx).set(channel)
+  }
+
+  // Create buffer source
+  let source = audioContext.createBufferSource()
+  source.buffer = audioBuffer
+  source.connect(mediaStream)
+  source.start(0, audio.currentTime, audioDuration)
+
+  // Audio events
+  audio.addEventListener('timeupdate', () => {
+    onTimeUpdate().catch(console.error)
+  })
+
+  async function onTimeUpdate(): Promise<void> {
+    if (audio.seeking || buffered.reachedEnd) return
+    if (audio.currentTime + 60 > buffered.time) {
+      const beforeSamples = buffered.samples
+      const decodedAudio = await loadNext()
+      if (decodedAudio === undefined) return
+
+      const { channelData } = decodedAudio
+
+      for (const [idx, channel] of channelData.entries()) {
+        audioBuffer.copyToChannel(channel, idx, beforeSamples)
+      }
+
+      source.stop(0)
+      source.disconnect()
+
+      source = audioContext.createBufferSource()
+      source.buffer = audioBuffer
+      source.connect(mediaStream)
+      source.start(
+        0, // buffered.sampleOffset / sampleRate / scalingFactor,
+        audio.currentTime,
+        audioDuration
+      )
     }
   }
 
-  for (let i = 0; i + 1 < buffer.length; i++) {
-    if (
-      buffer[i] === SyncByte1 &&
-      buffer[i + 1] === SyncByte2 &&
-      buffer[i + 2] === 224 &&
-      buffer[i + 3] === 64
-    ) {
-      return i
-    }
-  }
-
-  for (let i = 0; i + 1 < buffer.length; i++) {
-    if (
-      buffer[i] === SyncByte1 &&
-      buffer[i + 1] === SyncByte2 &&
-      buffer[i + 2] === SyncByte3
-    ) {
-      return i
-    }
-  }
-
-  for (let i = 0; i + 1 < buffer.length; i++) {
-    if (buffer[i] === SyncByte1 && buffer[i + 1] === SyncByte2) {
-      return i
-    }
-  }
-
-  return headerStart
+  // Fin
+  return { supported: true }
 }
