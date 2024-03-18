@@ -116,7 +116,7 @@
     "it-all": "^3.0.4",
     "multiformats": "^13.1.0",
     "p-debounce": "^4.0.0",
-    "uint8arrays": "^5.0.2",
+    "uint8arrays": "^5.0.3",
     "wnfs": "0.2.2"
   },
   "devDependencies": {
