@@ -25,7 +25,7 @@
     "uint8arrays": "^5.0.2"
   },
   "devDependencies": {
-    "@rsbuild/core": "^0.4.4",
+    "@rsbuild/core": "^0.4.15",
     "@types/node": "^20.11.0",
     "typescript": "5.4.2"
   },
