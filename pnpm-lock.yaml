@@ -174,8 +174,8 @@ importers:
         specifier: ^4.4.0
         version: 4.4.0
       fast-check:
-        specifier: ^3.15.1
-        version: 3.15.1
+        specifier: ^3.16.0
+        version: 3.16.0
       mocha:
         specifier: ^10.3.0
         version: 10.3.0
@@ -3129,8 +3129,8 @@ packages:
       homedir-polyfill: 1.0.3
     dev: true
 
-  /fast-check@3.15.1:
-    resolution: {integrity: sha512-GutOXZ+SCxGaFWfHe0Pbeq8PrkpGtPxA9/hdkI3s9YzqeMlrq5RdJ+QfYZ/S93jMX+tAyqgW0z5c9ppD+vkGUw==}
+  /fast-check@3.16.0:
+    resolution: {integrity: sha512-k8GtQHi4pJoRQ1gVDFQno+/FVkowo/ehiz/aCj9O/D7HRWb1sSFzNrw+iPVU8QlWtH+jNwbuN+dDVg3QkS56DQ==}
     engines: {node: '>=8.0.0'}
     dependencies:
       pure-rand: 6.0.4
