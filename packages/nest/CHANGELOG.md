@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.0.0](https://github.com/wnfs-wg/nest/compare/nest-v1.0.0...nest-v2.0.0) (2024-03-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* Switch to SHA256 hashed CIDs, instead of rs-wnfs default Blake3, for better compatibility
+
+### Features
+
+* add ability to read with offset and length + update to wnfs 0.2.0 ([0478813](https://github.com/wnfs-wg/nest/commit/0478813f06d2e4be3e5decfd284ea3f353164ecb))
+* add demo ([118f7a2](https://github.com/wnfs-wg/nest/commit/118f7a2e0642c07d80590fd6c76e001e893bd6a6))
+* add modifications to publish event ([d6b654c](https://github.com/wnfs-wg/nest/commit/d6b654cf6e5959ccf33ada391eb77acec1daea65))
+* add onCommit option ([ac1b2c7](https://github.com/wnfs-wg/nest/commit/ac1b2c7582c479a1344af76efb47db1a89ccedb9))
+* Add size method ([a8f6910](https://github.com/wnfs-wg/nest/commit/a8f6910d08bfc2349e767fc6e368227c0d9ec849))
+* expose errors via entry point ([d8ec1b5](https://github.com/wnfs-wg/nest/commit/d8ec1b5c3a40587c00ff86c2fffb5b3656d5162f))
+* Switch to SHA256 hashed CIDs, instead of rs-wnfs default Blake3, for better compatibility ([743e3b7](https://github.com/wnfs-wg/nest/commit/743e3b779094ec8770f207bfa15aae7dce180c2e))
+* throw an error if an infused transaction is a no-op ([a21de2a](https://github.com/wnfs-wg/nest/commit/a21de2a44af92676e78f4c600bea4def29f2be82))
+
+
+### Bug Fixes
+
+* docs generation ([bd10db1](https://github.com/wnfs-wg/nest/commit/bd10db17dd4450609163824619f3d91be89a5be5))
+* lint error ([e34c608](https://github.com/wnfs-wg/nest/commit/e34c608beda249e4272083bf7ad80075e86930df))
+* **nest:** add missing crypto browser redirect ([5d48dae](https://github.com/wnfs-wg/nest/commit/5d48daeb8a5f6547e05d6c6f3e6fdbe0f01ddb92))
+* **nest:** add missing files to npm output ([3276417](https://github.com/wnfs-wg/nest/commit/3276417138f6ce54143939dc5dfefecdf8dbaa16))
+* publish debounce ([a3b6038](https://github.com/wnfs-wg/nest/commit/a3b6038900c0198ecbe05eb1005a43d76d70c271))
+* update dependencies ([8b1a796](https://github.com/wnfs-wg/nest/commit/8b1a7965043c684970215cb606d074213ed54af5))
+* Update wnfs ([cd23e0a](https://github.com/wnfs-wg/nest/commit/cd23e0a5651746677b95b53f715689379b77ce87))
+
 ## [1.0.0](https://github.com/wnfs-wg/nest/compare/nest-v0.4.0...nest-v1.0.0) (2024-03-21)
 
 
