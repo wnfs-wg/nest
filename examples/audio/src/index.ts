@@ -24,6 +24,10 @@ const fs = await FS.load({ blockstore })
 const state = document.querySelector('#state')
 if (state === null) throw new Error('Expected a #state element to exist')
 
+/**
+ *
+ * @param msg
+ */
 function note(msg: string): void {
   if (state !== null) state.innerHTML = msg
 }
@@ -50,6 +54,12 @@ if (fi !== null)
 
 // 🎵
 
+/**
+ *
+ * @param fileName
+ * @param mimeType
+ * @param fileData
+ */
 async function createAudio(
   fileName: string,
   mimeType: string,
@@ -108,21 +118,21 @@ async function createAudio(
   // Try to create media source first
   let supportsMediaSource = false
 
-  // try {
-  //   const { supported } = createMediaSource({
-  //     audioDuration,
-  //     audioFrameCount,
-  //     audioFrameSize,
-  //     fileSize,
-  //     path,
-  //     metadataSize,
-  //     mimeType,
-  //   })
+  try {
+    const { supported } = createMediaSource({
+      audioDuration,
+      audioFrameCount,
+      audioFrameSize,
+      fileSize,
+      path,
+      metadataSize,
+      mimeType,
+    })
 
-  //   supportsMediaSource = supported
-  // } catch (error) {
-  //   console.error('Failed to create media source', error)
-  // }
+    supportsMediaSource = supported
+  } catch (error) {
+    console.error('Failed to create media source', error)
+  }
 
   // If that failed, decode the audio via wasm
   if (supportsMediaSource) return
@@ -144,6 +154,10 @@ async function createAudio(
 
 // 🛠️
 
+/**
+ *
+ * @param covers
+ */
 async function mediaInfoClient(covers: boolean): Promise<MediaInfo> {
   const MediaInfoFactory = await import('mediainfo.js').then((a) => a.default)
 
@@ -161,6 +175,17 @@ async function mediaInfoClient(covers: boolean): Promise<MediaInfo> {
 //
 // Let the browser decode the audio.
 
+/**
+ *
+ * @param root0
+ * @param root0.audioDuration
+ * @param root0.audioFrameCount
+ * @param root0.audioFrameSize
+ * @param root0.fileSize
+ * @param root0.metadataSize
+ * @param root0.mimeType
+ * @param root0.path
+ */
 function createMediaSource({
   audioDuration,
   audioFrameCount,
@@ -203,6 +228,9 @@ function createMediaSource({
     end: 0,
   }
 
+  /**
+   *
+   */
   async function loadNext(): Promise<void> {
     if (
       src.readyState !== 'open' ||
@@ -284,6 +312,9 @@ function createMediaSource({
       time
     )
 
+    /**
+     *
+     */
     function abortAndRemove(): void {
       if (src.readyState === 'open') sourceBuffer.abort()
       sourceBuffer.addEventListener('updateend', nextUp, { once: true })
@@ -302,6 +333,9 @@ function createMediaSource({
       abortAndRemove()
     }
 
+    /**
+     *
+     */
     function nextUp(): void {
       if (audioDuration !== undefined && !sourceBuffer.updating)
         src.duration = audioDuration
@@ -343,6 +377,18 @@ function createMediaSource({
 // ⚠️ This code assumes the audio bytes will be loaded in before
 //    the current audio segment ends.
 
+/**
+ *
+ * @param root0
+ * @param root0.audioDuration
+ * @param root0.audioFrameCount
+ * @param root0.audioFrameSize
+ * @param root0.fileSize
+ * @param root0.mediainfo
+ * @param root0.metadataSize
+ * @param root0.mimeType
+ * @param root0.path
+ */
 async function createWebAudio({
   audioDuration,
   audioFrameCount,
@@ -423,6 +469,9 @@ async function createWebAudio({
 
   let loading = false
 
+  /**
+   *
+   */
   async function loadNext(): Promise<MPEGDecodedAudio | undefined> {
     if (loading) return
     loading = true
@@ -503,6 +552,9 @@ async function createWebAudio({
     onTimeUpdate().catch(console.error)
   })
 
+  /**
+   *
+   */
   async function onTimeUpdate(): Promise<void> {
     if (audio.seeking || buffered.reachedEnd) return
     if (audio.currentTime + 60 > buffered.time) {

@@ -3,7 +3,9 @@ import { IDBBlockstore } from 'blockstore-idb'
 import * as uint8arrays from 'uint8arrays'
 
 declare global {
+  // eslint-disable-next-line no-var
   var _fs: FileSystem
+  // eslint-disable-next-line no-var
   var _Path: typeof Path
 }
 

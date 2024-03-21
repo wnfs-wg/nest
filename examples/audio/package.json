@@ -34,10 +34,17 @@
     "vite-plugin-wasm": "^3.3.0"
   },
   "eslintConfig": {
-    "extends": ["@fission-codes"],
-    "ignorePatterns": ["dist"],
+    "extends": [
+      "@fission-codes"
+    ],
+    "ignorePatterns": [
+      "dist"
+    ],
     "rules": {
-      "no-console": ["off", "always"]
+      "no-console": [
+        "off",
+        "always"
+      ]
     }
   }
 }
