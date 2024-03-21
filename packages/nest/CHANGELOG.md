@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/wnfs-wg/nest/compare/nest-v0.4.0...nest-v1.0.0) (2024-03-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* Switch to SHA256 hashed CIDs, instead of rs-wnfs default Blake3, for better compatibility
+
+### Features
+
+* Switch to SHA256 hashed CIDs, instead of rs-wnfs default Blake3, for better compatibility ([743e3b7](https://github.com/wnfs-wg/nest/commit/743e3b779094ec8770f207bfa15aae7dce180c2e))
+
 ## [0.4.0](https://github.com/wnfs-wg/nest/compare/nest-v0.3.3...nest-v0.4.0) (2024-03-08)
 
 
