@@ -31,6 +31,14 @@ export function wnfs(blockstore: Blockstore): WnfsBlockStore {
       const decodedCid = CID.decode(cid)
       await blockstore.put(decodedCid, bytes)
     },
+
+    // Don't hash blocks with the rs-wnfs default Blake 3, sha256 has better support
+    async putBlock(bytes: Uint8Array, codec: number): Promise<Uint8Array> {
+      const hash = await sha256.digest(bytes)
+      const cid = CID.create(1, codec, hash)
+      await blockstore.put(cid, bytes)
+      return cid.bytes
+    },
   }
 }
 
