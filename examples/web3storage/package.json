@@ -1,0 +1,51 @@
+{
+  "name": "demo",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "author": "Steven Vandevelde <icid.asset@gmail.com> (tokono.ma)",
+  "license": "MIT",
+  "keywords": [],
+  "main": "src/main.jsx",
+  "scripts": {
+    "lint": "tsc --build && eslint . && prettier --check '**/*.{js,jsx,ts,tsx,yml,json,css}' --ignore-path ../../.gitignore",
+    "dev": "rsbuild dev",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview"
+  },
+  "dependencies": {
+    "@picocss/pico": "^2.0.6",
+    "@ucanto/core": "^9.0.1",
+    "@web3-storage/upload-client": "^13.1.0",
+    "@web3-storage/w3up-client": "^12.5.0",
+    "@wnfs-wg/nest": "*",
+    "blockstore-core": "^4.4.0",
+    "blockstore-idb": "^1.1.8",
+    "idb-keyval": "^6.2.1",
+    "interface-blockstore": "^5.2.10",
+    "maake-oob": "^0.1.4",
+    "partykit-transport": "^0.1.0",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^0.5.2",
+    "@types/node": "^20.11.30",
+    "@types/qrcode": "^1.5.5",
+    "typescript": "5.4.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@fission-codes"
+    ],
+    "ignorePatterns": [
+      "dist"
+    ],
+    "rules": {
+      "no-console": [
+        "off",
+        "always"
+      ]
+    }
+  }
+}

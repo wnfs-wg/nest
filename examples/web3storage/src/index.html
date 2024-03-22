@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#484A65" />
+    <meta name="description" content="Demo " />
+
+    <title>Web3Storage WNFS Demo</title>
+
+    <style>
+      /* Prefixed with 'html body' to increase selector weight in order to override pico.css */
+
+      html body .mb-0 {
+        margin-bottom: 0;
+      }
+
+      html body ul li {
+        list-style: none;
+      }
+
+      html body [role='delete'] {
+        cursor: pointer;
+      }
+
+      html body .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- HEADER -->
+
+    <header class="container grid">
+      <h1>
+        <small>Web3Storage WNFS Demo</small>
+      </h1>
+      <p>
+        <small>
+          This is a simple todo app. The todo items are saved here locally and
+          then optionally synced to
+          <a href="https://web3.storage/">Web3Storage</a>, a service that keeps
+          your (encrypted) data around in the cloud. This is managed by a file
+          system named <a href="https://github.com/wnfs-wg/">WNFS</a>.
+        </small>
+      </p>
+    </header>
+
+    <!-- MAIN -->
+
+    <main class="container">
+      <form id="input-form" class="hidden">
+        <fieldset role="group">
+          <input
+            type="text"
+            name="todo"
+            placeholder="🔒 Secret encrypted todo item"
+            aria-label="Todo item"
+            required="true"
+            aria-required="true"
+          />
+          <input type="submit" value="Add to do" />
+        </fieldset>
+      </form>
+      <h2><small>Todos</small></h2>
+      <ul id="list" aria-busy="true" style="padding: 0"></ul>
+    </main>
+
+    <!-- FOOTER -->
+
+    <footer class="container">
+      <!-- Not authenticated -->
+      <p data-context="not-authenticated" class="hidden">
+        <mark>
+          <span style="font-variant-emoji: emoji">&#x26a0;&#xfe0f;</span>
+          Not syncing with Web3Storage yet
+        </mark>
+      </p>
+      <div role="group" data-context="not-authenticated" class="hidden">
+        <button id="sign-up-trigger" class="outline" style="width: 50%">
+          🚀 Store todo list in the cloud
+        </button>
+        <button
+          id="sign-in-trigger"
+          class="outline secondary"
+          style="width: 50%"
+        >
+          🔗 Use todo list from the cloud
+        </button>
+      </div>
+      <!-- Loading -->
+      <p data-context="authenticating" class="hidden">
+        <mark>
+          <span style="font-variant-emoji: emoji">⏳</span>
+          Configuring Web3Storage
+        </mark>
+      </p>
+      <!-- Authenticated -->
+      <p data-context="authenticated" class="hidden">
+        <mark>
+          <span style="font-variant-emoji: emoji">✅</span>
+          Syncing with Web3Storage
+        </mark>
+      </p>
+      <div role="group" data-context="authenticated" class="hidden">
+        <button id="device-link-trigger" class="outline" style="width: 50%">
+          🔗 Link other device
+        </button>
+        <p style="margin-left: 1.5em; width: 50%">
+          <small>
+            If you want to verify that the blocks are actually stored on W3S,
+            delete the local blockstore table from IndexedDB, and then reload
+            the page. If your todo list loads, then it works.
+          </small>
+        </p>
+      </div>
+    </footer>
+
+    <!-- DIALOGS -->
+
+    <dialog role="sign-in">
+      <form role="sign-in">
+        <article>
+          <header>
+            <button aria-label="Close" rel="prev" type="button"></button>
+            <p>
+              <strong> 🔗 Use todo list stored on Web3Storage </strong>
+            </p>
+          </header>
+          <p>
+            If you have an existing todo list you can use it here by connecting
+            to another device/browser that has that todo list.
+            <br /><br />
+          </p>
+          <ol>
+            <li>
+              Open this app/page on your device, or browser, that has your todo
+              list.
+            </li>
+            <li>Click on the "🔗 Link other device" button</li>
+          </ol>
+          <p style="line-height: 1.1">
+            <br />
+            <small
+              ><small
+                >🚧 TODO: Provide the ability to use a passkey to encrypt the
+                file system, which can then be used in combination with the
+                email address and space name to recover the file system.</small
+              ></small
+            >
+          </p>
+        </article>
+      </form>
+    </dialog>
+
+    <dialog role="sign-up">
+      <form role="sign-up">
+        <article>
+          <header>
+            <button aria-label="Close" rel="prev" type="button"></button>
+            <p>
+              <strong>🚀 Store todo list on Web3Storage</strong>
+            </p>
+          </header>
+          <p>
+            Sign into your Web3Storage account, or provide an email address to
+            create a Web3Storage account with.
+          </p>
+          <p>
+            <small>
+              The todo list will live in its own Web3Storage space.
+            </small>
+          </p>
+          <p>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              autocomplete="email"
+              required="true"
+              aria-label="Email"
+              aria-required="true"
+            />
+            <input
+              type="text"
+              name="space-name"
+              placeholder="Space name"
+              required="true"
+              aria-label="Space name"
+              aria-required="true"
+              value="My Todo List"
+              class="mb-0"
+            />
+          </p>
+          <footer>
+            <button class="secondary mb-0" type="submit">Store</button>
+          </footer>
+        </article>
+      </form>
+    </dialog>
+
+    <dialog role="device-link">
+      <form role="device-link">
+        <article>
+          <header>
+            <button aria-label="Close" rel="prev" type="button"></button>
+            <p>
+              <strong>🔗 Link other devices</strong>
+            </p>
+          </header>
+          <p>
+            Scan this QR code with your other device to load the same todo list
+            there. Or open this URL in another browser.
+          </p>
+          <div id="qr-code"></div>
+        </article>
+      </form>
+    </dialog>
+  </body>
+</html>
